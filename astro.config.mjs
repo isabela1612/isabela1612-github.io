@@ -52,6 +52,7 @@ function patchKatexFontDisplayPlugin() {
 // https://astro.build/config
 export default defineConfig({
 	site: siteUrl,
+	base: '/isabela1612-github.io/',
 	integrations: [
 		mdx(),
 		sitemap({

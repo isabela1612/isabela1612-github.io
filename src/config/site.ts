@@ -34,7 +34,7 @@ export interface SiteConfig {
 
 export const siteConfig: SiteConfig = {
   siteUrl: 'https://isabela1612.github.io/isabela1612-github.io/',
-  siteTitle: 'Isabela Góm',
+  siteTitle: 'Isabela Gómez',
   siteTitleSuffix: 'Portafolio',
   siteDescription: 'Estoy dispuesta a seguir aprendiendo y continuar con mi profesion',
   locale: 'es',
