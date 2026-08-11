@@ -47,8 +47,8 @@
 
         <div class="search-footer">
             <span class="search-hint">
-                <kbd>↵</kbd> 跳转
-                <kbd>ESC</kbd> 关闭
+                <kbd>↵</kbd> Ir
+                <kbd>ESC</kbd> Cerrar
             </span>
         </div>
     </div>
@@ -58,29 +58,29 @@
             <svg aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
                 <circle cx="11" cy="11" r="8"></circle><path d="m21 21-4.35-4.35"></path>
             </svg>
-            <p>输入关键词开始搜索</p>
+            <p>Introduce una palabra clave para buscar</p>
         </div>
     </template>
     <template data-search-template="loading">
         <div class="search-state">
             <span class="search-spinner" aria-hidden="true"></span>
-            <p>正在加载搜索索引…</p>
+            <p>Cargando índice de búsqueda…</p>
         </div>
     </template>
     <template data-search-template="error">
         <div class="search-state search-state-error">
             <svg aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="9"></circle><path d="M12 7v6M12 17h.01"></path></svg>
-            <p data-search-error-message>搜索索引加载失败</p>
-            <button type="button" class="search-retry" data-search-retry>重试</button>
+            <p data-search-error-message>No se pudo cargar el índice de búsqueda</p>
+            <button type="button" class="search-retry" data-search-retry>Reintentar</button>
         </div>
     </template>
     <template data-search-template="empty-index">
-        <div class="search-state"><p>暂无可搜索文章</p></div>
+        <div class="search-state"><p>No hay artículos disponibles para buscar</p></div>
     </template>
     <template data-search-template="no-results">
         <div class="search-state">
             <svg aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="11" cy="11" r="8"></circle><path d="m21 21-4.35-4.35M8 8l6 6M14 8l-6 6"></path></svg>
-            <p>未找到相关文章</p>
+            <p>No se encontraron artículos relacionados</p>
         </div>
     </template>
 </div>
