@@ -35,7 +35,7 @@ export interface HeroConfig {
 export const heroConfig: HeroConfig = {
   home: {
     text: 'Conoce más de mi y mis proyectos.',
-    subtitle: 'Conoceras de mis aprendizajes y crecimientosen esta plataforma.',
+    subtitle: 'Conoceras de mis aprendizajes y crecimientos en esta plataforma.',
     backgroundImage: defaultBackground.src,
   },
   blog: {

@@ -4,7 +4,7 @@ import defaultAvatar from '../assets/profile.jpg';
 /**
  * Allowed social entry keys in profile configuration.
  */
-export type ProfileSocialKey = 'github' | 'x' | 'email' | 'website';
+export type ProfileSocialKey = 'github'  | 'email' | 'website';
 
 /**
  * One social link item rendered on `/about`.
@@ -55,15 +55,14 @@ export interface ProfileConfig {
 
 export const profileConfig: ProfileConfig = {
   avatar: defaultAvatar,
-  name: 'Your Name',
-  title: 'Your Role / Focus',
-  bio: 'Write a short self-introduction here. This content is used in About and article schema.',
-  location: 'Your City',
-  email: 'you@example.com',
-  githubProfileUrl: 'https://example.com',
+  name: 'Isabela Gómez',
+  title: 'Estudiante en ingenieria de sistemas',
+  bio: 'Estoy dispuesta en seguir aprendiendo y enfrentar retos',
+  location: 'Bogota.DC',
+  email: 'isabelago214@gmail.com',
+  githubProfileUrl: 'https://github.com/isabela1612',
   socials: [
-    { key: 'github', label: 'GitHub', url: 'https://example.com' },
-    { key: 'x', label: 'X', url: 'https://example.com' },
+    { key: 'github', label: 'GitHub', url: 'https://github.com/isabela1612' },
     { key: 'website', label: 'Website', url: 'https://example.com' },
   ],
 };
