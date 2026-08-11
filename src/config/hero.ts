@@ -34,23 +34,23 @@ export interface HeroConfig {
 
 export const heroConfig: HeroConfig = {
   home: {
-    text: 'Build your ideas, one post at a time.',
-    subtitle: 'A clean Astro theme with centralized configuration.',
+    text: 'Conoce más de mi y mis proyectos.',
+    subtitle: 'Conoceras de mis aprendizajes y crecimientosen esta plataforma.',
     backgroundImage: defaultBackground.src,
   },
   blog: {
-    text: 'All Posts',
-    subtitle: 'Browse your writing archive.',
+    text: 'Blog',
+    subtitle: 'Comparto mis aprendizajes, proyectos y experiencias durante mi formación.',
     backgroundImage: defaultBackground.src,
   },
   tags: {
-    text: 'Tags',
-    subtitle: 'Explore topics by category and tag.',
+    text: 'Temas',
+    subtitle: 'Explora mis artículos por temas de interés.',
     backgroundImage: defaultBackground.src,
   },
   about: {
-    text: 'About',
-    subtitle: 'Introduce yourself and your work.',
+    text: 'Sobre mí',
+    subtitle: 'Conoce mi formación, habilidades y experiencia en Ingeniería de Sistemas.',
     backgroundImage: defaultBackground.src,
   },
   postDefaultBackground: defaultBackground.src,
