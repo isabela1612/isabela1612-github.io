@@ -39,7 +39,7 @@ export const heroConfig: HeroConfig = {
     backgroundImage: defaultBackground.src,
   },
   blog: {
-    text: 'Blog',
+    text: 'Mis proyectos',
     subtitle: 'Comparto mis aprendizajes, proyectos y experiencias durante mi formación.',
     backgroundImage: defaultBackground.src,
   },
