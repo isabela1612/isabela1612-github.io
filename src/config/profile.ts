@@ -57,12 +57,11 @@ export const profileConfig: ProfileConfig = {
   avatar: defaultAvatar,
   name: 'Isabela Gómez',
   title: 'Estudiante en ingenieria de sistemas',
-  bio: 'Estoy dispuesta en seguir aprendiendo y enfrentar retos',
+  bio: 'Estoy dispuesta en seguir aprendiendo y enfrentar retos ✨',
   location: 'Bogota.DC',
   email: 'isabelago214@gmail.com',
   githubProfileUrl: 'https://github.com/isabela1612',
   socials: [
     { key: 'github', label: 'GitHub', url: 'https://github.com/isabela1612' },
-    { key: 'website', label: 'Website', url: 'https://example.com' },
   ],
 };
