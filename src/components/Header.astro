@@ -17,7 +17,6 @@ const { transparent = true } = Astro.props;
 <div class="internal-links">
 	<HeaderLink href={`${import.meta.env.BASE_URL}`}>Home</HeaderLink>
 	<HeaderLink href={`${import.meta.env.BASE_URL}blog`}>Blog</HeaderLink>
-	<HeaderLink href={`${import.meta.env.BASE_URL}tags`}>Tags</HeaderLink>
 	<HeaderLink href={`${import.meta.env.BASE_URL}about`}>About</HeaderLink>
 	<div class="nav-indicator" id="nav-indicator"></div>
 </div>
@@ -75,7 +74,6 @@ const { transparent = true } = Astro.props;
 	<nav class="mobile-nav-links" aria-label="移动端导航">
 		<a href={import.meta.env.BASE_URL} class="mobile-nav-link">Home</a>
 		<a href={`${import.meta.env.BASE_URL}blog`} class="mobile-nav-link">Blog</a>
-		<a href={`${import.meta.env.BASE_URL}tags`} class="mobile-nav-link">Tags</a>
 		<a href={`${import.meta.env.BASE_URL}about`} class="mobile-nav-link">About</a>
 	</nav>
 </aside>
