@@ -42,9 +42,11 @@ const TitleTag = titleTag;
 
 <article class={articleClass}>
 	<TitleTag class={titleClass}>
-		<a href={`/blog/${post.id}/`}>{post.data.title}</a>
-		<DraftBadge draft={post.data.draft} />
-	</TitleTag>
+    <a href={`${import.meta.env.BASE_URL}blog/${post.id}/`}>
+        {post.data.title}
+    </a>
+	<DraftBadge draft={post.data.draft} />
+    </TitleTag>
 	{showExcerpt && excerpt && <p class={excerptClass}>{excerpt}</p>}
 	<PostMeta
 		date={post.data.pubDate}
