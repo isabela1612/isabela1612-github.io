@@ -43,6 +43,11 @@ export const heroConfig: HeroConfig = {
     subtitle: 'Comparto mis aprendizajes, proyectos y experiencias durante mi formación.',
     backgroundImage: defaultBackground.src,
   },
+  tags: {
+    text: 'Temas',
+    subtitle: 'Explora mis artículos por temas de interés.',
+    backgroundImage: defaultBackground.src,
+  },
   about: {
     text: 'Sobre mí',
     subtitle: 'Conoce mi formación, habilidades y experiencia en Ingeniería de Sistemas.',
