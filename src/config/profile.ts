@@ -56,9 +56,9 @@ export interface ProfileConfig {
 export const profileConfig: ProfileConfig = {
   avatar: defaultAvatar,
   name: 'Isabela Gómez',
-  title: 'Estudiante en ingenieria de sistemas',
-  bio: 'Estoy dispuesta en seguir aprendiendo y enfrentar retos ✨',
-  location: 'Bogota.DC',
+  title: 'Estudiante en Ingeniería de Sistemas',
+  bio: 'Estoy dispuesta a seguir aprendiendo y enfrentar retos ✨',
+  location: 'Bogota DC',
   email: 'isabelago214@gmail.com',
   githubProfileUrl: 'https://github.com/isabela1612',
   socials: [
