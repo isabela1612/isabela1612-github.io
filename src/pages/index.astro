@@ -333,29 +333,29 @@ function formatDate(date: Date) {
       <div class="stats-container">
         <SectionHeader
           number="01"
-          title="文章"
+          title="Proyectos"
           intro={hasPosts
-            ? `从 ${formatDate(startDate!)} 的第一篇文章开始，本站已经更新了......`
-            : '当前模板未附带文章内容，你可以在 src/content/blog/ 中添加 Markdown 文章后自动显示统计与列表。'}
+            ? `Desde el primer artículo del ${formatDate(startDate!)}, este sitio ha publicado...`
+            : 'Esta plantilla actualmente no incluye contenido de artículos.'}
         />
 
         <div class="stats-grid">
           <div class="stat-item">
             <span class="stat-value">{postCount} 篇</span>
-            <span class="stat-label">文章</span>
+            <span class="stat-label">Proyectos</span>
           </div>
           <div class="stat-item">
             <span class="stat-value">{formatWordCount(wordCount)}</span>
-            <span class="stat-label">字数</span>
+            <span class="stat-label">palabras</span>
           </div>
           <div class="stat-item">
             <span class="stat-value">{tagCount} 个</span>
-            <span class="stat-label">标签</span>
+            <span class="stat-label">etiqueta(s)</span>
           </div>
         </div>
 
         <div class="recent-posts-section">
-          <SectionHeader number="02" title="最近更新" intro={hasPosts ? '最新发布的 10 篇文章' : '暂无文章可展示'} />
+          <SectionHeader number="02" title="最近更新" intro={hasPosts ? 'Los 10 proyectos publicados más recientemente' : 'No hay proyectos para mostrar por el momento.'} />
 
           {recentPosts.length > 0 ? (
             <>
@@ -375,11 +375,13 @@ function formatDate(date: Date) {
                   />
                 ))}
               </div>
-              <a href="/blog" class="blog-link" style="margin-top: 1em;">查看全部文章 ⇗</a>
+              <a href={`${import.meta.env.BASE_URL}proyectos`} class="blog-link" style="margin-top: 1em;">
+                  Ver todos los proyectos ⇗
+              </a>
             </>
           ) : (
             <p class="empty-state">
-              这里还没有文章。请在 <code>src/content/blog/</code> 新建 <code>.md</code> 或 <code>.mdx</code> 文件。
+              Aquí todavía no hay artículos.
             </p>
           )}
         </div>
