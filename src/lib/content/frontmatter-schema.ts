@@ -30,13 +30,6 @@ export const blogFrontmatterSchema = z
 			});
 		}
 
-		if (!data.draft && data.tags.length === 0) {
-			context.addIssue({
-				code: 'custom',
-				path: ['tags'],
-				message: '正式文章至少需要一个标签',
-			});
-		}
 
 		if (new Set(data.tags).size !== data.tags.length) {
 			context.addIssue({
