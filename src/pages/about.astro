@@ -259,13 +259,11 @@ const personSchema = {
   backgroundImage={aboutHero.backgroundImage}
   compact={true}
 >
-  <iframe
-    src="https://www.youtube.com/embed/3tmZOuCLGDY"
-    width="560"
-    height="315"
-    title="Video de presentación"
-    allowfullscreen
-  ></iframe>
+  <video controls width="560" height="315">
+  <source src="/assets/Video de presentacion.mp4" type="video/mp4">
+  Tu navegador no soporta la reproducción de videos.
+</video>
+
 </HeroHeader>
 
   <div class="stats-wrapper">
