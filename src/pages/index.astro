@@ -333,7 +333,7 @@ function formatDate(date: Date) {
       <div class="stats-container">
         <SectionHeader
           number="01"
-          title="Proyectos"
+          title="Evidencias"
           intro={hasPosts
             ? `Desde el primer artículo del ${formatDate(startDate!)}, este sitio ha publicado...`
             : 'Esta plantilla actualmente no incluye contenido de artículos.'}
@@ -342,7 +342,7 @@ function formatDate(date: Date) {
         <div class="stats-grid">
           <div class="stat-item">
             <span class="stat-value">{postCount} Capítulo</span>
-            <span class="stat-label">Proyectos</span>
+            <span class="stat-label">Evidencias</span>
           </div>
           <div class="stat-item">
             <span class="stat-value">{formatWordCount(wordCount)}</span>
@@ -351,7 +351,7 @@ function formatDate(date: Date) {
         </div>
 
         <div class="recent-posts-section">
-          <SectionHeader number="02" title="Últimas actualizaciones" intro={hasPosts ? 'Los 10 proyectos publicados más recientemente' : 'No hay proyectos para mostrar por el momento.'} />
+          <SectionHeader number="02" title="Últimas actualizaciones" intro={hasPosts ? 'Los 10 Evidencias publicados más recientemente' : 'No hay Evidencias para mostrar por el momento.'} />
 
           {recentPosts.length > 0 ? (
             <>
@@ -372,7 +372,7 @@ function formatDate(date: Date) {
                 ))}
               </div>
               <a href={`${import.meta.env.BASE_URL}blog`} class="blog-link" style="margin-top: 1em;">
-                  Ver todos los proyectos ⇗
+                  Ver todos los Evidencias ⇗
               </a>
             </>
           ) : (

@@ -34,13 +34,13 @@ export interface HeroConfig {
 
 export const heroConfig: HeroConfig = {
   home: {
-    text: 'Conoce más de mi y mis proyectos.',
+    text: 'Conoce más de mi y mis evidencias/proyectos.',
     subtitle: 'Conoceras de mis aprendizajes y crecimientos en esta plataforma.',
     backgroundImage: defaultBackground.src,
   },
   blog: {
-    text: 'Mis proyectos',
-    subtitle: 'Comparto mis aprendizajes, proyectos y experiencias durante mi formación.',
+    text: 'Mis evidencias',
+    subtitle: 'Comparto mis aprendizajes, proyectos, evidencias y experiencias durante mi formación.',
     backgroundImage: defaultBackground.src,
   },
   tags: {
