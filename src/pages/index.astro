@@ -351,7 +351,7 @@ function formatDate(date: Date) {
         </div>
 
         <div class="recent-posts-section">
-          <SectionHeader number="02" title="Últimas actualizaciones" intro={hasPosts ? 'Los 10 Evidencias publicados más recientemente' : 'No hay Evidencias para mostrar por el momento.'} />
+          <SectionHeader number="02" title="Últimas actualizaciones" intro={hasPosts ? 'Las 10 Evidencias publicadas más recientemente' : 'No hay Evidencias para mostrar por el momento.'} />
 
           {recentPosts.length > 0 ? (
             <>
@@ -372,7 +372,7 @@ function formatDate(date: Date) {
                 ))}
               </div>
               <a href={`${import.meta.env.BASE_URL}blog`} class="blog-link" style="margin-top: 1em;">
-                  Ver todos los Evidencias ⇗
+                  Ver todas las Evidencias ⇗
               </a>
             </>
           ) : (
