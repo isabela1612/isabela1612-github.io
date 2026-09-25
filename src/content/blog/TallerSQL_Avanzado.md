@@ -15,6 +15,63 @@ En este espacio se presentan los ejercicios realizados y resueltos durante las c
 </a>
 
 
+### 6.1 Verificación de casos borde del esquema
+Columnas obligatorias: caso_borde, empleados_afectados, descripcion
+
+Debe devolver exactamente cuatro filas: empleado sin jefe, empleado sin departamento,
+empleados sin comisión y departamentos sin empleados.
+
+• Estos cuatro casos son los que hacen fallar las consultas de los bloques siguientes.
+Identificarlos primero es parte de la evaluación.
+
+SOLUCION 
+
+
+```sql
+SELECT 'Empleado sin jefe' AS caso_borde,
+       count(*) AS Empleados_afectados,
+       'Empleado que el manager id se encuentra en NULL' AS descripcion
+FROM hr.employees E
+LEFT JOIN HR.EMPLOYEES M
+ON e.manager_id = m.employee_id
+WHERE m.employee_id IS NULL
+
+UNION ALL
+
+SELECT 'Empleado sin departamento',
+        COUNT(*),
+        'Empleado donde el departamento id este en NULL' 
+FROM hr.employees E
+LEFT JOIN HR.DEPARTMENTS D
+ON E.DEPARTMENT_ID = D.DEPARTMENT_ID
+WHERE D.DEPARTMENT_ID IS NULL
+
+UNION ALL
+
+SELECT 'Empleado sin comisión',
+        COUNT(*),
+        'Empleado donde la comisión este en NULL' 
+FROM hr.employees E
+WHERE E.Commission_pct IS NULL
+
+UNION ALL
+
+SELECT 'Deparatamento sin empleado',
+        COUNT(*),
+        'Departamento donde el employee id del empleado este en NULL' 
+FROM hr.employees E
+RIGHT JOIN HR.DEPARTMENTS D
+ON E.DEPARTMENT_ID = D.DEPARTMENT_ID
+WHERE E.employee_ID IS NULL
+```
+
+```
+Como en el ejercicio se piden cuatro filas, se utilizó UNION ALL, que permite unir todos los SELECT y mostrar los resultados de cada uno, obteniendo así las cuatro filas que pide el ejercicio.
+
+También se utilizó COUNT(*) porque este cuenta todas las filas, incluyendo las que tienen valores NULL. En este caso, como se utiliza WHERE para evaluar la condición, se cuentan únicamente los registros que cumplen con ella, que en este caso son los valores NULL. Si se utilizara COUNT(columna), los valores NULL no se contarían, por lo que el resultado sería 0 aunque existan registros con esa columna en NULL.
+```
+
+
 ### 6.2 Inventario completo de departamentos
 
 Columnas obligatorias: department_id, department_name, city, country_name,
@@ -28,7 +85,7 @@ employee_count, avg_salary
 
 SOLUCIÓN
 
-No serviria usar count(*) ya que este se ejecuta después de hacer join, y cuenta los NULL por lo que el valor sería 1 y no como 0. En cambio, si solo se pone COUNT(columna) solo cuenta los valores que no sean NULL.
+> No serviria usar count(*) ya que este se ejecuta después de hacer join, y cuenta los NULL por lo que el valor sería 1 y no como 0. En cambio, si solo se pone COUNT(columna) solo cuenta los valores que no sean NULL.
 
 ```sql
 SELECT D.department_id, 
@@ -163,9 +220,11 @@ Columnas obligatorias: department_id, department_name, employee_count, avg_salar
 min_salary, max_salary, salary_mass, empleados_recientes
 
 Solo departamentos con más de cinco empleados y salario promedio superior a 6.000.
+
 • empleados_recientes debe contar únicamente a los contratados después del 1 de enero de
 2005, sin que ese criterio afecte a employee_count. Debe resolverse con agregación
 condicional, no con WHERE.
+
 • El comentario debe justificar por qué el criterio de más de cinco empleados no puede
 escribirse en WHERE.
 
