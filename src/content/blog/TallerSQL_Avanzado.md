@@ -57,6 +57,8 @@ INNER JOIN.
 
 SOLUCIÓN
 
+En la siguiente imagen se muestra el empleado 100 con manager_name en NULL. Esto fue posible gracias al uso de CASE, ya que permite establecer una condición: si el valor está vacío, se muestra NULL; de lo contrario, se muestra el nombre del empleado correspondiente. Esta función sirve para controlar qué valor se desea mostrar dependiendo de una determinada condición. 
+
 ![alt text](image.png)
 
 Si se usara INNER JOIN, eliminaría la fila 107, ya que el manager estaría en NULL y no mostraría los valores que no coinciden entre las tablas. Es por ello que se utilizó LEFT JOIN, que permite mostrar la fila que no muestra el INNER JOIN; aunque el manager esté en NULL, mantiene la fila de la tabla izquierda y coloca NULL en los datos de la tabla derecha que no tengan coincidencia. 
