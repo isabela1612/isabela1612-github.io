@@ -14,6 +14,7 @@ En este espacio se presentan los ejercicios realizados y resueltos durante las c
   Descargar PDF
 </a>
 
+
 ### 6.2 Inventario completo de departamentos
 
 Columnas obligatorias: department_id, department_name, city, country_name,
@@ -26,7 +27,7 @@ SOLUCIÓN
 
 No serviria usar count(*) ya que este se ejecuta después de hacer join, y cuenta los NULL por lo que el valor sería 1 y no como 0. En cambio, si solo se pone COUNT(columna) solo cuenta los valores que no sean NULL.
 
-```SQL
+```sql
 SELECT D.department_id, 
        D.DEPARTMENT_NAME, 
        L.CITY, 
@@ -56,9 +57,11 @@ INNER JOIN.
 
 SOLUCIÓN
 
+![alt text](image.png)
+
 Si se usara INNER JOIN, eliminaría la fila 107, ya que el manager estaría en NULL y no mostraría los valores que no coinciden entre las tablas. Es por ello que se utilizó LEFT JOIN, que permite mostrar la fila que no muestra el INNER JOIN; aunque el manager esté en NULL, mantiene la fila de la tabla izquierda y coloca NULL en los datos de la tabla derecha que no tengan coincidencia. 
 
-```SQL
+```sql
 SELECT E.EMPLOYEE_ID,
        E.FIRST_NAME || ' ' || e.last_name AS employee_name,
        J.JOB_TITLE,
@@ -85,10 +88,12 @@ cláusula ON y luego en la cláusula WHERE.
 • Deben registrar el conteo de filas de cada variante y enunciar en una sola frase la regla general
 que se deriva de la diferencia
 
+SOLUCIÓN
+
 La condición en ON mantiene todas las filas de la tabla izquierda (mostrando nulos si no hay coincidencia), mientras que en WHERE elimina los nulos por completo del resultado final
 
 ON
-```SQL
+```sql
 SELECT 'ON' AS variante,
        COUNT(*) AS filas_devueltas,
        'Conserva las filas de la tabla derecha' AS explicacion
@@ -98,7 +103,7 @@ ON e.department_id = D.department_id AND E.SALARY > 10000;
 ```
 
 WHERE
-```SQL
+```sql
 SELECT 'WHERE' AS variante,
        COUNT(*) AS filas_devueltas,
        'Elimina los nulos por completo del resultado final.' AS explicacion
