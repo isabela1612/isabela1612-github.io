@@ -57,7 +57,7 @@ INNER JOIN.
 
 SOLUCIÓN
 
-En la siguiente imagen se muestra el empleado 100 con manager_name en NULL. Esto fue posible gracias al uso de CASE, ya que permite establecer una condición: si el valor está vacío, se muestra NULL; de lo contrario, se muestra el nombre del empleado correspondiente. Esta función sirve para controlar qué valor se desea mostrar dependiendo de una determinada condición. 
+En la siguiente imagen se muestra el empleado 100 con manager_name en NULL. Esto fue posible gracias al uso de CASE, ya que permite establecer una condición: si el valor está vacío, se muestra NULL; de lo contrario, se muestra el nombre del empleado correspondiente. Esta función sirve para controlar qué valor se desea mostrar dependiendo de una determinada condición 
 
 ![alt text](image.png)
 
