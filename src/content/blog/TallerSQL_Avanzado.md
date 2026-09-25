@@ -19,8 +19,11 @@ En este espacio se presentan los ejercicios realizados y resueltos durante las c
 
 Columnas obligatorias: department_id, department_name, city, country_name,
 employee_count, avg_salary
+
 • Deben aparecer todos los departamentos, incluidos los que no tienen ningún empleado.
+
 • employee_count debe mostrar 0 para los departamentos vacíos, no una fila ausente ni el valor 1.
+
 • El comentario debe explicar por qué COUNT(*) produce el valor incorrecto en este caso y qué función lo corrige.
 
 SOLUCIÓN
@@ -51,7 +54,9 @@ GROUP BY D.department_id,
 
 Columnas obligatorias: employee_id, employee_name, job_title, manager_id, manager_name,
 department_name
+
 • El empleado 100 debe aparecer en el resultado con manager_name en nulo.
+
 • El comentario debe indicar qué tipo de reunión se usó y qué ocurre con ese empleado si se usa
 INNER JOIN.
 
@@ -85,8 +90,10 @@ ON D.DEPARTMENT_ID = E.DEPARTMENT_ID;
 ### 6.4 Contraste entre la condición en ON y la condición en WHERE
 
 Columnas obligatorias: variante, filas_devueltas, explicacion
+
 • Deben ejecutar la misma reunión externa filtrando por salario superior a 10.000, primero en la
 cláusula ON y luego en la cláusula WHERE.
+
 • Deben registrar el conteo de filas de cada variante y enunciar en una sola frase la regla general
 que se deriva de la diferencia
 
@@ -115,5 +122,97 @@ ON e.department_id = D.department_id
 WHERE e.salary > 10000;
 ```
 
+### 6.5 Diagnóstico de nulos y compensación total
+
+Columnas obligatorias: employee_id, last_name, department_id, salary, commission_pct,
+total_compensation, es_jefe
+
+• total_compensation no puede ser nulo para ningún empleado.
+
+• es_jefe debe indicar explícitamente SI o NO y resolverse con NOT EXISTS.
+
+• El comentario debe explicar por qué la versión con NOT IN sobre la subconsulta de manager_id
+devuelve el conjunto vacío, y por qué NOT EXISTS no presenta ese comportamiento
+
+La version con NOT EXISTS permite trabajar con nulos, simplemente verifica si existe o no existe una fila que cumpla la condición. En cambio, NOT IN puede presentar problemas cuando existen valores NULL, debido a la forma en que SQL evalúa estas comparaciones.
+
+El uso del CASE nos permitio cumplir con la segunda condicion para indicar si el empleado es jefe mediante SI o NO. Valida si el id del manager concuerda con el empleado, si es el caso lo agrega como SI, indicando queque es Jefe; en caso contrario, muestra NO
+
+```sql
+SELECT E.EMPLOYEE_ID,
+       E.LAST_NAME,
+       E.DEPARTMENT_ID,
+       E.SALARY,
+       E.commission_pct,
+       E.SALARY + (E.SALARY * NVL(COMMISSION_PCT, 0)) AS total_compensation,
+       CASE
+         WHEN NOT EXISTS(
+            SELECT 1
+            FROM HR.EMPLOYEES M
+            WHERE M.MANAGER_ID = E.EMPLOYEE_ID
+        )
+        THEN 'NO'
+        ELSE 'SI'
+      END AS ES_JEFE
+FROM HR.EMPLOYEES E;
+```
+
+### 6.6 Agregación con filtrado de grupos
+
+Columnas obligatorias: department_id, department_name, employee_count, avg_salary,
+min_salary, max_salary, salary_mass, empleados_recientes
+
+Solo departamentos con más de cinco empleados y salario promedio superior a 6.000.
+• empleados_recientes debe contar únicamente a los contratados después del 1 de enero de
+2005, sin que ese criterio afecte a employee_count. Debe resolverse con agregación
+condicional, no con WHERE.
+• El comentario debe justificar por qué el criterio de más de cinco empleados no puede
+escribirse en WHERE.
+
+```sql
+SELECT D.DEPARTMENT_ID, 
+      D.DEPARTMENT_NAME,
+      COUNT(E.EMPLOYEE_ID) AS employee_count,
+      AVG (E.SALARY) AS PROMEDIO_SALARIO,
+      MIN(SALARY) AS min_salary,
+      MAX(SALARY) AS max_salary,
+      SUM(E.SALARY) AS salary_mass,
+      COUNT(CASE 
+          WHEN E.HIRE_DATE > TO_DATE('2025-01-01', 'YYYY-MM-DD') THEN E.EMPLOYEE_ID
+      END) AS empleados_recientes
+FROM HR.EMPLOYEES E 
+JOIN HR.DEPARTMENTS D
+ON E.DEPARTMENT_ID = D.DEPARTMENT_ID
+GROUP BY D.DEPARTMENT_ID,
+         d.department_name
+HAVING COUNT(E.EMPLOYEE_ID) > 5 AND AVG (E.SALARY) > 6000 ;
+```
+
+### 6.7 Comparación de cada empleado contra el promedio de su departamento
+
+Columnas obligatorias: employee_id, last_name, department_id, salary, dept_avg_salary,
+diff_vs_avg, pct_vs_avg
+
+• Deben entregar dos versiones equivalentes: una con subconsulta correlacionada y otra con
+expresión común de tabla.
+
+• El comentario debe señalar exactamente qué columna produce la correlación y comparar
+ambos planes de ejecución obtenidos con EXPLAIN PLAN o AUTOTRACE.
+
+```sql
+SELECT E.EMPLOYEE_ID,
+       E.LAST_NAME,
+       E.DEPARTMET_ID,
+       E.SALARY,
+      (SELECT E2.EMPLOYEE_ID,
+              AVG(E.SALARY) 
+       FROM HR.EMPLOYEES E2
+       WHERE E.DEPARTMENT_ID = E2.DEPARTMENT_ID
+       GROUP BY D.DEPARTMENT_ID
+      )AS dept_avg_salary,
+       E.SALARY - dept_avg_salary AS diff_vs_avg,
+       (E.SALARY - dept_avg_salary / dept_avg_salary * 100) AS pct_vs_avg
+FROM HR.EMPLOYEES E;
+```
 
 
