@@ -65,11 +65,11 @@ ON E.DEPARTMENT_ID = D.DEPARTMENT_ID
 WHERE E.employee_ID IS NULL
 ```
 
-```
-Como en el ejercicio se piden cuatro filas, se utilizó UNION ALL, que permite unir todos los SELECT y mostrar los resultados de cada uno, obteniendo así las cuatro filas que pide el ejercicio.
+
+>Como en el ejercicio se piden cuatro filas, se utilizó UNION ALL, que permite unir todos los SELECT y mostrar los resultados de cada uno, obteniendo así las cuatro filas que pide el ejercicio.
 
 También se utilizó COUNT(*) porque este cuenta todas las filas, incluyendo las que tienen valores NULL. En este caso, como se utiliza WHERE para evaluar la condición, se cuentan únicamente los registros que cumplen con ella, que en este caso son los valores NULL. Si se utilizara COUNT(columna), los valores NULL no se contarían, por lo que el resultado sería 0 aunque existan registros con esa columna en NULL.
-```
+
 
 
 ### 6.2 Inventario completo de departamentos
@@ -119,11 +119,11 @@ INNER JOIN.
 
 SOLUCIÓN
 
-En la siguiente imagen se muestra el empleado 100 con manager_name en NULL. Esto fue posible gracias al uso de CASE, ya que permite establecer una condición: si el valor está vacío, se muestra NULL; de lo contrario, se muestra el nombre del empleado correspondiente. Esta función sirve para controlar qué valor se desea mostrar dependiendo de una determinada condición 
+> En la siguiente imagen se muestra el empleado 100 con manager_name en NULL. Esto fue posible gracias al uso de CASE, ya que permite establecer una condición: si el valor está vacío, se muestra NULL; de lo contrario, se muestra el nombre del empleado correspondiente. Esta función sirve para controlar qué valor se desea mostrar dependiendo de una determinada condición 
 
 ![alt text](image.png)
 
-Si se usara INNER JOIN, eliminaría la fila 107, ya que el manager estaría en NULL y no mostraría los valores que no coinciden entre las tablas. Es por ello que se utilizó LEFT JOIN, que permite mostrar la fila que no muestra el INNER JOIN; aunque el manager esté en NULL, mantiene la fila de la tabla izquierda y coloca NULL en los datos de la tabla derecha que no tengan coincidencia. 
+> Si se usara INNER JOIN, eliminaría la fila 107, ya que el manager estaría en NULL y no mostraría los valores que no coinciden entre las tablas. Es por ello que se utilizó LEFT JOIN, que permite mostrar la fila que no muestra el INNER JOIN; aunque el manager esté en NULL, mantiene la fila de la tabla izquierda y coloca NULL en los datos de la tabla derecha que no tengan coincidencia. 
 
 ```sql
 SELECT E.EMPLOYEE_ID,
@@ -156,7 +156,7 @@ que se deriva de la diferencia
 
 SOLUCIÓN
 
-La condición en ON mantiene todas las filas de la tabla izquierda (mostrando nulos si no hay coincidencia), mientras que en WHERE elimina los nulos por completo del resultado final
+> La condición en ON mantiene todas las filas de la tabla izquierda (mostrando nulos si no hay coincidencia), mientras que en WHERE elimina los nulos por completo del resultado final
 
 ON
 ```sql
@@ -191,9 +191,9 @@ total_compensation, es_jefe
 • El comentario debe explicar por qué la versión con NOT IN sobre la subconsulta de manager_id
 devuelve el conjunto vacío, y por qué NOT EXISTS no presenta ese comportamiento
 
-La version con NOT EXISTS permite trabajar con nulos, simplemente verifica si existe o no existe una fila que cumpla la condición. En cambio, NOT IN puede presentar problemas cuando existen valores NULL, debido a la forma en que SQL evalúa estas comparaciones.
+> La version con NOT EXISTS permite trabajar con nulos, simplemente verifica si existe o no existe una fila que cumpla la condición. En cambio, NOT IN puede presentar problemas cuando existen valores NULL, debido a la forma en que SQL evalúa estas comparaciones.
 
-El uso del CASE nos permitio cumplir con la segunda condicion para indicar si el empleado es jefe mediante SI o NO. Valida si el id del manager concuerda con el empleado, si es el caso lo agrega como SI, indicando queque es Jefe; en caso contrario, muestra NO
+> El uso del CASE nos permitio cumplir con la segunda condicion para indicar si el empleado es jefe mediante SI o NO. Valida si el id del manager concuerda con el empleado, si es el caso lo agrega como SI, indicando queque es Jefe; en caso contrario, muestra NO
 
 ```sql
 SELECT E.EMPLOYEE_ID,
