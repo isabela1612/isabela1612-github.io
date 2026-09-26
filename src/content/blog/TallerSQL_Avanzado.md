@@ -66,9 +66,9 @@ WHERE E.employee_ID IS NULL
 ```
 
 
->Como en el ejercicio se piden cuatro filas, se utilizó UNION ALL, que permite unir todos los SELECT y mostrar los resultados de cada uno, obteniendo así las cuatro filas que pide el ejercicio.
+> Como en el ejercicio se piden cuatro filas, se utilizó UNION ALL, que permite unir todos los SELECT y mostrar los resultados de cada uno, obteniendo así las cuatro filas que pide el ejercicio.
 
-También se utilizó COUNT(*) porque este cuenta todas las filas, incluyendo las que tienen valores NULL. En este caso, como se utiliza WHERE para evaluar la condición, se cuentan únicamente los registros que cumplen con ella, que en este caso son los valores NULL. Si se utilizara COUNT(columna), los valores NULL no se contarían, por lo que el resultado sería 0 aunque existan registros con esa columna en NULL.
+> También se utilizó COUNT(*) porque este cuenta todas las filas, incluyendo las que tienen valores NULL. En este caso, como se utiliza WHERE para evaluar la condición, se cuentan únicamente los registros que cumplen con ella, que en este caso son los valores NULL. Si se utilizara COUNT(columna), los valores NULL no se contarían, por lo que el resultado sería 0 aunque existan registros con esa columna en NULL.
 
 
 
@@ -258,6 +258,9 @@ expresión común de tabla.
 • El comentario debe señalar exactamente qué columna produce la correlación y comparar
 ambos planes de ejecución obtenidos con EXPLAIN PLAN o AUTOTRACE.
 
+
+SUBCONSULTA CORRELACIONADA
+
 ```sql
 SELECT E.EMPLOYEE_ID,
        E.LAST_NAME,
@@ -273,5 +276,279 @@ SELECT E.EMPLOYEE_ID,
        (E.SALARY - dept_avg_salary / dept_avg_salary * 100) AS pct_vs_avg
 FROM HR.EMPLOYEES E;
 ```
+> La línea que muestra que es una consulta correlacionada es WHERE E.DEPARTMENT_ID = E2.DEPARTMENT_ID, debido a que se relaciona la consulta externa con la interna. Esto hace que la consulta interna dependa de la fila que se está procesando en la consulta externa.
 
+
+EXPRESIÓN COMUN DE TABLA: WITH
+
+```sql
+WITH dept_avg AS(
+    SELECT DEPARTMENT_ID, AVG(SALARY) AS dept_avg_salary
+    FROM HR.EMPLOYEES E 
+    GROUP BY E.DEPARTMENT_ID
+    )
+SELECT E.EMPLOYEE_ID,
+       E.LAST_NAME,
+       E.DEPARTMENT_ID, 
+       E.SALARY,    
+       E.SALARY - dept_avg_salary AS diff_vs_avg,
+       (E.SALARY - dept_avg_salary / dept_avg_salary * 100) AS pct_vs_avg
+FROM HR.EMPLOYEES E
+JOIN dept_avg A
+ON E.DEPARTMENT_ID = A.DEPARTMENT_ID
+```
+
+### 6.8 Movilidad interna
+Columnas obligatorias: employee_id, last_name, movilidad_status
+
+• movilidad_status debe indicar CON HISTORIAL o SIN HISTORIAL.
+
+• Deben resolverlo con INTERSECT y MINUS, y contrastar el resultado con la versión equivalente
+escrita con NOT EXISTS.
+
+• El comentario debe explicar cómo tratan los nulos las operaciones de conjuntos frente al
+operador de igualdad.
+
+<INTERSECT y MINUS> 
+
+```sql
+SELECT E.EMPLOYEE_ID,
+       E.LAST_NAME,
+       CASE 
+          WHEN E.EMPLOYEE_ID IN (
+            SELECT E.EMPLOYEE_ID
+            FROM HR.EMPLOYEES E
+            INTERSECT 
+            SELECT J.EMPLOYEE_ID 
+            FROM HR.JOB_HISTORY J)
+          THEN  'CON HISTORIAL'
+         WHEN E.EMPLOYEE_ID IN (
+            SELECT E.EMPLOYEE_ID
+            FROM HR.EMPLOYEES E
+            MINUS 
+            SELECT J.EMPLOYEE_ID 
+            FROM HR.JOB_HISTORY J)
+         THEN 'SIN HISTORIAL'
+        END AS movilidad_status
+FROM HR.EMPLOYEES E; 
+
+<NOT EXISTS>
+
+```sql
+SELECT E.EMPLOYEE_ID,
+       E.LAST_NAME,
+       CASE
+           WHEN EXISTS (
+               SELECT 1
+               FROM HR.JOB_HISTORY J
+               WHERE J.EMPLOYEE_ID = E.EMPLOYEE_ID
+           )
+           THEN 'CON HISTORIAL'
+
+           WHEN NOT EXISTS (
+               SELECT 1
+               FROM HR.JOB_HISTORY J
+               WHERE J.EMPLOYEE_ID = E.EMPLOYEE_ID
+           )
+           THEN 'SIN HISTORIAL'
+       END AS movilidad_status
+FROM HR.EMPLOYEES E;
+
+```
+
+> La sentencia que trabaja con los conjuntos maneja los nulos de una manera diferente, debido a que intenta comparar las dos tablas para saber la relación entre ellas (INTERSECT) y si pertenece a una tabla y no a otra (MINUS). En el caso de que ambas tablas presenten NULL en sus resultados, los tomará en cuenta, ya sea que en ambas tengan NULL para decir que coinciden, o que el NULL pertenezca a la tabla que se está evaluando con MINUS.
+
+> Es por ello que con NOT EXISTS no pasa este mismo comportamiento, ya que al realizar la comparación con =, si los valores son NULL, el resultado será UNKNOWN y no se tomará como una coincidencia como ocurre con las operaciones de conjuntos.
+
+### 6.9 Jerarquía organizacional
+Columnas obligatorias: employee_id, last_name, manager_id, nivel, ruta_jerarquica
+
+• Debe construirse con una expresión común de tabla recursiva, con caso base en el empleado
+sin jefe.
+
+• ruta_jerarquica debe mostrar la cadena de apellidos desde la raíz hasta el empleado.
+
+• El comentario debe identificar el caso base y el paso recursivo, explicar qué ocurre si UNION
+ALL se reemplaza por UNION y cómo se controlaría un ciclo en los datos.
+
+
+
+### 6.10 Posicionamiento salarial por departamento
+Columnas obligatorias: employee_id, last_name, department_id, salary, rn, rk, drk, prev_salary,
+delta_prev, salary_running_total, dept_avg_salary, pct_vs_dept_avg
+
+• rn, rk y drk corresponden a ROW_NUMBER, RANK y DENSE_RANK sobre la misma partición y el
+mismo ordenamiento.
+
+• prev_salary y delta_prev deben calcularse con LAG sobre la fecha de contratación, sin que la
+primera fila de cada partición quede en nulo.
+
+• salary_running_total es el acumulado por departamento en orden de contratación.
+
+
+
+
+### 6.11 Tres mejor pagados de cada departamento
+Columnas obligatorias: department_id, department_name, employee_id, last_name, salary, drk
+
+• No se acepta filtrar el alias de la función de ventana en el WHERE de la misma consulta.
+
+• El comentario debe explicar en qué momento del orden lógico de evaluación se calculan las
+funciones de ventana y por qué eso obliga a envolver la consulta.
+
+
+```sql
+WITH MEJORPAGADOS AS (
+    SELECT 
+       D.DEPARTMENT_ID,
+       D.DEPARTMENT_NAME,
+       E.EMPLOYEE_ID,
+       E.LAST_NAME,
+       E.SALARY,
+        DENSE_RANK() OVER (
+            PARTITION BY  D.DEPARTMENT_ID
+            ORDER BY E.SALARY DESC
+        ) AS MEJOR_PAGA
+    FROM HR.EMPLOYEES E
+    JOIN HR.DEPARTMENTS D
+    ON D.DEPARTMENT_ID = E.DEPARTMENT_ID
+)
+
+SELECT DEPARTMENT_ID,
+       DEPARTMENT_NAME,
+       EMPLOYEE_ID,
+       LAST_NAME,
+       SALARY
+FROM MEJORPAGADOS 
+WHERE MEJOR_PAGA <= 3
+ORDER BY DEPARTMENT_ID ASC, MEJOR_PAGA ASC;
+```
+
+> primero se calcula lo que se encuntra dentro del WITH, permitiendo realizar un cálculo y envolver toda esa operación para utilizarla posteriormente en otra parte de la consulta. as funciones de ventana se calculan después de las cláusulas WHERE, GROUP BY y HAVING, por lo que no se puede filtrar directamente en el mismo nivel de consulta el resultado de la función de ventana. Posteriormente, se reliza lo que está afuera del WITH utilizando este como una "tabla" y permitiendo realizar las especificaciones según la operación que se realizó. En este caso, se asignó un rango para cada empleado de cada departamento de toda la tabla y despues, con la consula exterior, se da una condicion WHERE MEJOR_PAGA <= 3 mostrando únicamente los empleados que se encuentran dentro de los tres mejores rangos de cada departamento.
+
+#### 6.12 Depuración de consultas defectuosas
+
+Columnas obligatorias del cuadro de diagnóstico: consulta_id, enunciado, error_detectado,
+mecanismo, evidencia_correccion
+
+
+<table>
+  <thead>
+    <tr>
+      <th>Consulta ID</th>
+      <th>Enunciado</th>
+      <th>Error detectado</th>
+      <th>Mecanismo</th>
+      <th>Evidencia de corrección</th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <tr>
+      <td>I.1</td>
+      <td>Todos los departamentos con la cantidad de empleados, incluidos los vacíos.</td>
+      <td>
+        Se utilizó <code>COUNT(*)</code>, lo que cuenta la fila generada por el
+        <code>LEFT JOIN</code> aunque el empleado sea <code>NULL</code>.
+      </td>
+      <td>
+        <code>COUNT(*)</code> cuenta filas, mientras que
+        <code>COUNT(e.employee_id)</code> ignora los valores <code>NULL</code>.
+      </td>
+      <td>
+        Al cambiar a <code>COUNT(e.employee_id)</code>, los departamentos sin
+        empleados muestran una cantidad de 0.
+      </td>
+    </tr>
+   <tr>
+     <td>I.2</td>
+     <td>Empleados que no trabajan en los departamentos 10, 20 ni 30.</td>
+     <td>
+        El <code>NOT IN</code> no maneja correctamente los valores
+        <code>NULL</code>, ya que los empleados cuyo <code>department_id</code>
+        es <code>NULL</code> no cumplen la condición.
+    </td>
+    <td>
+         Al comparar un <code>NULL</code> con los valores de <code>NOT IN</code>,
+         el resultado es <code>UNKNOWN</code>, por lo que el empleado no es
+         incluido por el <code>WHERE</code>.
+    </td>
+     <td>
+         Se debe considerar explícitamente el caso <code>NULL</code> para incluir
+         también a los empleados que no tienen departamento.
+     </td>
+   </tr>
+   <tr>
+  <td>I.3</td>
+  <td>
+    Departamentos ubicados en Estados Unidos y la cantidad de empleados que trabajan en ellos.
+  </td>
+  <td>
+    Se utiliza <code>LEFT JOIN</code> con <code>locations</code>, aunque se
+    requieren únicamente los departamentos cuya ubicación corresponde a
+    Estados Unidos. El <code>LEFT JOIN</code> conserva también los
+    departamentos sin coincidencia en <code>locations</code>.
+  </td>
+  <td>
+    El <code>LEFT JOIN</code> genera también filas con valores
+    <code>NULL</code> para las columnas de <code>locations</code>. Aunque
+    posteriormente el <code>WHERE l.country_id = 'US'</code> elimina esas
+    filas y las que no corresponden a Estados Unidos, el uso de
+    <code>LEFT JOIN</code> no es necesario para este caso, ya que se buscan
+    únicamente coincidencias.
+  </td>
+  <td>
+    Se reemplaza el <code>LEFT JOIN</code> por <code>JOIN</code> para
+    <code>locations</code>. Si también se utiliza <code>JOIN</code> con
+    <code>employees</code>, el <code>COUNT(*)</code> puede mantenerse porque
+    solo se consideran filas con coincidencias.
+  </td>
+</tr>
+<tr>
+  <td>I.4</td>
+  <td>
+    El empleado mejor pagado de cada departamento.
+  </td>
+  <td>
+    Se incluye <code>last_name</code> en el <code>GROUP BY</code>, por lo que
+    se crea un grupo diferente para cada empleado dentro de cada departamento.
+    De esta manera, <code>MAX(salary)</code> no obtiene el salario máximo de
+    todo el departamento.
+  </td>
+  <td>
+    Al agrupar por <code>department_id</code> y <code>last_name</code>, cada
+    empleado queda en su propio grupo. Por lo tanto, <code>MAX(salary)</code>
+    se calcula sobre cada empleado individualmente en lugar de calcularse
+    sobre todos los empleados del departamento.
+  </td>
+  <td>
+    Se debe agrupar únicamente por <code>department_id</code> para obtener el
+    salario máximo de cada departamento. Posteriormente, se requiere otro
+    mecanismo para identificar el empleado que corresponde a ese salario
+    máximo.
+  </td>
+  </tr>
+  <tr>
+  <td>I.5</td>
+  <td>
+    Promedio de comisión de la compañía, contando como cero a quienes no reciben comisión.
+  </td>
+  <td>
+    Se utiliza <code>AVG(commission_pct)</code> directamente, pero los empleados
+    que no reciben comisión tienen el valor <code>NULL</code>.
+  </td>
+  <td>
+    <code>AVG()</code> ignora los valores <code>NULL</code> al calcular el
+    promedio. Por lo tanto, los empleados que no reciben comisión no participan
+    en el denominador del promedio.
+  </td>
+      <td>
+    Se deben convertir los valores <code>NULL</code> de <code>commission_pct</code>
+    a <code>0</code> antes de aplicar <code>AVG()</code>, por ejemplo mediante
+    <code>NVL(commission_pct, 0)</code>.
+    </td>
+  </tr>
+
+  </tbody>
+</table>
 
