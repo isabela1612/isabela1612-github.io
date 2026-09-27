@@ -309,7 +309,7 @@ escrita con NOT EXISTS.
 • El comentario debe explicar cómo tratan los nulos las operaciones de conjuntos frente al
 operador de igualdad.
 
-<INTERSECT y MINUS> 
+>INTERSECT y MINUS
 
 ```sql
 SELECT E.EMPLOYEE_ID,
@@ -331,8 +331,9 @@ SELECT E.EMPLOYEE_ID,
          THEN 'SIN HISTORIAL'
         END AS movilidad_status
 FROM HR.EMPLOYEES E; 
+```
 
-<NOT EXISTS>
+> NOT EXISTS
 
 ```sql
 SELECT E.EMPLOYEE_ID,
@@ -371,6 +372,35 @@ sin jefe.
 • El comentario debe identificar el caso base y el paso recursivo, explicar qué ocurre si UNION
 ALL se reemplaza por UNION y cómo se controlaría un ciclo en los datos.
 
+```sql
+WITH JERARQUIA (
+                EMPLOYEE_ID,
+                LAST_NAME,
+                MANAGER_ID,
+                NIVEL,
+                RUTA_JERARQUIA
+                ) AS (
+                       SELECT E.EMPLOYEE_ID,
+                              E.LAST_NAME,
+                              E.MANAGER_ID,
+                              1 AS NIVEL,
+                              E.LAST_NAME AS RUTA_JERARQUIA
+                       FROM HR.EMPLOYEES E
+                       WHERE E.MANAGER_ID IS NULL
+                       
+                       UNION ALL
+                       
+                       SELECT E.EMPLOYEE_ID,
+                              E.LAST_NAME,
+                              E.MANAGER_ID,
+                              J.NIVEL + 1,
+                              J.RUTA_JERARQUIA || ' ' || E.LAST_NAME
+                       FROM HR.EMPLOYEES E
+                       JOIN JERARQUIA J
+                       ON E.MANAGER_ID = J.EMPLOYEE_ID
+                       )
+SELECT * FROM JERARQUIA;
+```
 
 
 ### 6.10 Posicionamiento salarial por departamento
@@ -385,8 +415,62 @@ primera fila de cada partición quede en nulo.
 
 • salary_running_total es el acumulado por departamento en orden de contratación.
 
+SOLUCION
 
+```sql
+SELECT employee_id,
+       last_name,
+       department_id,
+       salary,
 
+       ROW_NUMBER() OVER (
+           PARTITION BY department_id
+           ORDER BY salary DESC
+       ) AS rn,
+
+       RANK() OVER (
+           PARTITION BY department_id
+           ORDER BY salary DESC
+       ) AS rk,
+
+       DENSE_RANK() OVER (
+           PARTITION BY department_id
+           ORDER BY salary DESC
+       ) AS drk,
+
+       LAG(salary, 1, salary) OVER (
+           PARTITION BY department_id
+           ORDER BY hire_date
+       ) AS prev_salary,
+
+       salary -
+       LAG(salary, 1, salary) OVER (
+           PARTITION BY department_id
+           ORDER BY hire_date
+       ) AS delta_prev,
+
+       SUM(salary) OVER (
+           PARTITION BY department_id
+           ORDER BY hire_date
+           ROWS BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW
+       ) AS salary_running_total,
+
+       AVG(salary) OVER (
+           PARTITION BY department_id
+       ) AS dept_avg_salary,
+
+       ROUND(
+           100 * salary /
+           AVG(salary) OVER (
+               PARTITION BY department_id
+           ),
+           2
+       ) AS pct_vs_dept_avg
+
+FROM HR.EMPLOYEES
+ORDER BY department_id, 
+         hire_date;
+```
 
 ### 6.11 Tres mejor pagados de cada departamento
 Columnas obligatorias: department_id, department_name, employee_id, last_name, salary, drk
