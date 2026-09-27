@@ -23,24 +23,32 @@ Todo el trabajo que va a ejecutar un programa se define por cuatro palabras clav
 
 ### ¿Para qué sirve?
 
-<tbody>
+<table>
+  <thead>
+    <tr>
+      <th>Elemento</th>
+      <th>Qué es</th>
+    </tr>
+  </thead>
+  <tbody>
     <tr>
       <td>Procedimientos almacenados</td>
       <td>un "programa" guardado dentro de la base</td>
     </tr>
-   <tr>
-     <td>Funciones</td>
-     <td>igual, pero devuelve un valor</td>
-   </tr>
-   <tr>
-     <td>Triggers</td>
-     <td>código que se dispara solo cuando algo pasa (un INSERT, por ejemplo)</td>
-   </tr>
-   <tr>
-     <td>Scripts</td>
-     <td>bloques sueltos para tareas puntuales</td>
-   </tr>
-   <tr>
+    <tr>
+      <td>Funciones</td>
+      <td>igual, pero devuelve un valor</td>
+    </tr>
+    <tr>
+      <td>Triggers</td>
+      <td>código que se dispara solo cuando algo pasa (un INSERT, por ejemplo)</td>
+    </tr>
+    <tr>
+      <td>Scripts</td>
+      <td>bloques sueltos para tareas puntuales</td>
+    </tr>
+  </tbody>
+</table>
 
 
 ### UNIDADES LÉXICAS
@@ -245,5 +253,75 @@ BEGIN
 END;
 ```
 
+### Operadores de PL/SQL
 
+<table>
+  <thead>
+    <tr>
+      <th>Tipo</th>
+      <th>Operadores</th>
+      <th>Para qué</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Asignación</td>
+      <td>:=</td>
+      <td>Guardar un valor</td>
+    </tr>
+    <tr>
+      <td>Aritméticos</td>
+      <td>+ - * / **</td>
+      <td>Operaciones</td>
+    </tr>
+    <tr>
+      <td>Relacionales</td>
+      <td>= &lt;&gt; &lt; &gt; &lt;= &gt;=</td>
+      <td>Comparar</td>
+    </tr>
+    <tr>
+      <td>Lógicos</td>
+      <td>AND OR NOT</td>
+      <td>Combinar condiciones</td>
+    </tr>
+    <tr>
+      <td>Concatenación</td>
+      <td>||</td>
+      <td>Unir cadenas de texto</td>
+    </tr>
+  </tbody>
+</table>
 
+### bloque anónimo vs subprograma(PROCEDURE)
+
+> Bloque anónimo (no tiene nombre, se ejecuta una sola vez, no queda guardado en la base):
+
+```sql
+DECLARE
+  v_location VARCHAR2(15) := 'Granada';
+  PI CONSTANT NUMBER := 3.1416;
+  v_nombre tabla_empleados.nombre%TYPE;
+  reg_datos micursor%ROWTYPE;
+BEGIN
+  -- ejecución
+EXCEPTION
+  -- manejo de errores
+END;
+```
+
+> Subprograma (procedimiento con nombre, se guarda permanentemente en la base de datos):
+
+```sql
+CREATE PROCEDURE simple_procedure IS
+  v_location VARCHAR2(15) := 'Granada';
+  PI CONSTANT NUMBER := 3.1416;
+BEGIN
+  -- ejecución
+EXCEPTION
+  -- manejo de errores
+END;
+```
+> La diferencia real no es la sintaxis interna (son casi idénticos) — es que el bloque anónimo se ejecuta y se olvida, mientras el procedimiento queda compilado y almacenado en el diccionario de datos, listo para llamarse muchas veces (EXEC simple_procedure;).
+
+> 🟣 El bloque anónimo se ejecuta como un bloque sin nombre.
+🔵 El procedimiento es un programa PL/SQL con nombre que se almacena en Oracle.
