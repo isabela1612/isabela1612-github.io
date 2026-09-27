@@ -124,6 +124,8 @@ EL SIGNO ":="
 
 ### Definicion de tipo de datos automatico(%TYPE y %ROWTYPE)
 
+%TYPE
+
 ```sql
 DECLARE
   nombre paises.nom_pais%TYPE;    
@@ -134,6 +136,9 @@ END;
 ```
 
 > Aquí %TYPE es un truco muy usado: en vez de escribir VARCHAR2(30) a mano y arriesgarte a que un día la tabla cambie de tipo y tu variable se desactualice, le dices "sé del mismo tipo que esa columna".
+
+
+%ROWTYPE
 
 ```sql
 v_empleado employees%ROWTYPE;
@@ -160,10 +165,85 @@ BEGIN
 END;
 ```
 
-> 1. El SELECT first_name FROM employees WHERE employee_id = 100; busca el nombre del empleado con el ID 100.
+1. El SELECT first_name FROM employees WHERE employee_id = 100; busca el nombre del empleado con el ID 100.
 2. Al encontrarlo (por ejemplo, "Steven"), la instrucción INTO v_nombre toma ese valor y lo guarda dentro de la variable v_nombre que declaraste arriba.
 
 >NOTA: Debe devolver exactamente una fila: Si el SELECT no encuentra ningún registro (NO_DATA_FOUND) o si devuelve más de una fila (TOO_MANY_ROWS), el programa fallará con un error a menos que captures la excepción.
+
+❌ MAL
+
+```sql
+DECLARE
+    v_nombre employees.first_name%TYPE; 
+BEGIN
+
+    SELECT first_name, last_name, salary 
+    INTO v_nombre 
+    FROM employees
+    WHERE employee_id = 100;
+
+END;
+```
+>LANZA UN ERROR --> PLS-00394: wrong number of values in the INTO list of a SELECT statement
+
+> Si pides 3 campos, necesitas 3 variables separadas por comas.
+Si pides 1 campo, necesitas 1 variable.
+
+Varios campos con SELECT INTO
+
+```sql
+DECLARE
+    v_nombre VARCHAR2(20);
+    v_apellidos VARCHAR2(20);
+    v_edad NUMBER;
+
+BEGIN
+
+    SELECT nombre, apellidos, edad
+    INTO v_nombre, v_apellidos, v_edad
+    FROM estudiante
+    WHERE identificacion = 10;
+
+END;
+```
+
+### DBMS_OUTPUT.PUT_LINE
+
+DBMS son paquetes de oracle, se puede decir que son como librerias
+
+EJEMPLO:
+
+```sql
+DBMS_OUTPUT.PUT_LINE();
+
+DBMS_OUTPUT.PUT_LINE('Nombre: ' || v_nombre);
+```
+
+> || --> sirve para concatenar 
+
+>En otra evidencia se explicara más sobre DBMS y lo que ofrece
+
+
+### EJEMPLO COMPLETO
+
+
+```sql
+DECLARE
+    v_nombre employees.first_name%TYPE;
+    v_salario employees.salary%TYPE;
+
+BEGIN
+
+    SELECT first_name, salary
+    INTO v_nombre, v_salario
+    FROM employees
+    WHERE employee_id = 100;
+
+    DBMS_OUTPUT.PUT_LINE('Nombre: ' || v_nombre);
+    DBMS_OUTPUT.PUT_LINE('Salario: ' || v_salario);
+
+END;
+```
 
 
 
