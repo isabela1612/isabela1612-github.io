@@ -65,28 +65,11 @@ Una función es un bloque de código que:
 
 PARA RECORDAR:
 
-¿Necesito CALCULAR algo?             
-        ↓
-      FUNCIÓN 🧮
-
-¿Necesito HACER algo?
-        ↓
-   PROCEDIMIENTO ⚙️
+![alt text](image-1.png)
 
 Por ejemplo:
 
-nota_definitiva(...)
-        ↑
-   sustantivo
-        ↓
-     FUNCIÓN
-
-
-registrar_matricula(...)
-        ↑
-      verbo
-        ↓
-   PROCEDIMIENTO
+![alt text](image-2.png)
 
 ### Estructura de una función
 
@@ -137,11 +120,7 @@ Los parámetros son los datos que entran a la función.
 
 significa:
 
-p_corte1
-   │
-   ├── nombre del parámetro
-   │
-   └── IN → entra a la función
+![alt text](image-3.png)
 
 
 > Se recomienda utilizar parámetros IN, especialmente porque una función utilizada desde SQL necesita cumplir determinadas restricciones.
@@ -279,6 +258,7 @@ Oracle guarda:
        ↓
 🗄️ Base de datos
 ```
+> La función puede incluso quedar en estado INVALID si tiene errores de compilación o si cambia una dependencia.
 
 ### ¿Qué significa que una función esté INVALID?
 
@@ -286,13 +266,7 @@ Si una funion utiliza la tabla estudiante y se modifica esa tabla, eso provoca q
 
 Pero si la recompilación falla:
 
-INVALID
-   ↓
-se intenta recompilar
-   ↓
-❌ falla
-   ↓
-error al ejecutar
+![alt text](image-4.png)
 
 > Por eso es importante revisar el estado antes de asumir que todo está bien.
 
@@ -348,22 +322,16 @@ Si se tienen 100.000 filas
 
 Además, existe un cambio de contexto entre:
 
+```text
 🟦 Motor SQL
      ↕
 🟧 Motor PL/SQL
+```
 
 
 IDEA CLAVE:
 
-SQL
- │
- │ llama
- ▼
-PL/SQL
- │
- │ devuelve
- ▼
-SQL
+![alt text](image-5.png)
 
 > Ese cambio repetido puede afectar el rendimiento.
 
@@ -382,7 +350,7 @@ Debe:
 ### DETERMINISTIC
 
 ```sql
-### DETERMINISTIC
+DETERMINISTIC
 
 ```
 
@@ -426,18 +394,11 @@ Visualmente
 
 Sin caché:
 
-Solicitud 1 → 🧮 calcula → resultado
-Solicitud 2 → 🧮 calcula → resultado
-Solicitud 3 → 🧮 calcula → resultado
+![alt text](image-6.png)
 
 Con caché:
 
-Solicitud 1 → 🧮 calcula → 💾 CACHE
-                              │
-Solicitud 2 ──────────────────┤
-Solicitud 3 ──────────────────┤
-                              ▼
-                         reutiliza
+![alt text](image-7.png)
 
 Es especialmente útil cuando tenemos datos que:
 1. se consultan mucho
@@ -491,20 +452,7 @@ EXCEPTION
 
 Ejemplo conceptual:
 
-SELECT ... INTO ...
-       │
-       ├── encuentra 1 fila
-       │       ↓
-       │    RETURN
-       │
-       ├── no encuentra
-       │       ↓
-       │  NO_DATA_FOUND
-       │
-       └── encuentra varias
-               ↓
-        TOO_MANY_ROWS
-
+![alt text](image-8.png)
 
 > NO_DATA_FOUND es como una excepción que debe manejarse explícitamente.
 
@@ -516,27 +464,13 @@ Una función puede ejecutarse bajo diferentes privilegios.
 
 Es el valor predeterminado.
 
-USUARIO A
-   │
-   │ llama función
-   ▼
-FUNCIÓN
-   │
-   ▼
-privilegios del dueño
+![alt text](image-9.png)
 
 2. AUTHID CURRENT_USER
 
 Utiliza los privilegios del usuario que está llamando.
 
-USUARIO A
-   │
-   │ llama
-   ▼
-FUNCIÓN
-   │
-   ▼
-privilegios de A
+![alt text](image-10.png)
 
 ### Funciones dentro de paquetes
 
@@ -544,15 +478,7 @@ privilegios de A
 
 Tenemos:
 
-📦 PACKAGE
-│
-├── 📄 SPECIFICATION
-│      ↓
-│   contrato público
-│
-└── ⚙️ BODY
-       ↓
-   implementación
+![alt text](image-11.png)
 
 EJEMPLO:
 
@@ -659,10 +585,11 @@ REGLAS:
 ```
 
 Rendimiento:
-
+```text
 SQL → función → SQL
        ↕
    cambio de contexto
+```
 
 Si se ejecuta muchas veces:
 
