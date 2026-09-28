@@ -708,5 +708,6 @@ BEGIN
        DBMS_OUTPUT.PUT_LINE('BAJO') 
     ELSE
        DBMS_OUTPUT.PUT_LINE('MEDIO') 
+    END IF;
 END;
 ```
