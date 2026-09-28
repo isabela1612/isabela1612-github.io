@@ -46,7 +46,7 @@ LOOP, WHILE y FOR sirven para repetir.
 
 > EXIT y CONTINUE modifican el comportamiento dentro de los bucles.
 
-¿DONDE SE PONDE ESTO?
+¿DONDE SE PONE ESTO?
 
 ```sql
 DECLARE
@@ -67,8 +67,6 @@ END;
 1. ¿Para qué sirve?
 
 Permite ejecutar instrucciones solamente cuando se cumple una condición.
-
-
 
 2. Estructura:
 
@@ -166,13 +164,11 @@ END IF;
 
   <tbody>
     <tr>
-      <td>```sql
+      <td>
           v_nota = NULL 
-          ```
         </td>
-      <td>```sql
-          v_nota = NULL 
-          ```
+      <td>
+          v_nota IS NULL 
           </td>
     </tr>
 
