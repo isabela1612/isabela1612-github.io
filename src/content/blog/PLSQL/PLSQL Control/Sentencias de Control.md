@@ -447,7 +447,74 @@ GOTO fin;
 
 <<fin>>
 NULL;
+
 ```
+
+EJEMPLO:
+
+```sql
+DECLARE
+    v_error VARCHAR2(1) := 'S';
+BEGIN
+
+    IF v_error = 'S' THEN
+        GOTO fin;
+    END IF;
+
+    DBMS_OUTPUT.PUT_LINE('Este mensaje NO aparece');
+
+    <<fin>>
+    DBMS_OUTPUT.PUT_LINE('El programa terminó');
+
+END;
+/
+```
+
+> ¿Qué sucede?
+
+```text
+1. v_error vale 'S'.
+2. Entra al IF.
+3. Se ejecuta: GOTO fin;
+4. Oracle busca la etiqueta: <<fin>>
+5. Salta directamente allí.
+6. Ejecuta: DBMS_OUTPUT.PUT_LINE('El programa terminó');
+```
+
+> GOTO casi nunca es la opción adecuada
+es una estructura que casi no se usa y la recomendación final indica que un GOTO no debería sobrevivir normalmente a una revisión de código.
+
+¿Por qué?
+
+Porque puede hacer que el flujo sea difícil de seguir.
+
+EJEMPLO:
+
+```sql
+GOTO parte3;
+
+...
+
+<<parte1>>
+...
+
+GOTO parte5;
+
+...
+
+<<parte3>>
+...
+
+GOTO parte1;
+
+...
+
+<<parte5>>
+...
+```
+
+> Cuando lees eso tienes que estar saltando por todo el código mentalmente para saber qué está pasando.En cambio, muchas veces ese problema se resuelve de forma más clara usando: IF, CASE, LOOP, EXIT, CONTINUE, una excepción
+
 
 NULL 
 
@@ -581,3 +648,65 @@ Es diferente de:
     </tr>
   </tbody>
 </table>
+
+
+### PREGUNTAS TEORICAS
+
+1. ¿Cuál es la diferencia principal entre una estructura de selección condicional y una estructura de iteración?
+
+
+La seleccion condicional es cuando se cumple alguna condicion o decision, y termina.En cambo la iteracion es cuando cierta parte de la logica se ejecuta repetidamente hasta que haya una condicion que los detenga, depende la itreacion que se use
+
+2. ¿Cuál es la diferencia entre: IF ... THEN y CASE ... y ¿en qué tipo de situación resulta más natural utilizar cada uno?
+
+3. Explica la diferencia entre LOOP, WHILE LOOP y FOR LOOP respecto a cuándo se evalúa la condición o cómo se determina la cantidad de iteraciones.
+
+Loop se termina de manera manual (cuanso se sabe especificamnete en que caso se debe terminar), siempre se ejcutaalmenos una vez ya que el exit se encuntra dentro de cuerpo, WHILE LOOP se ejecuta dependiendo de la condicion, puede ser ninguna vez todo depende de como se esta evaluando, y el FOR LOOP se ejcuta en un rango tal como de 1 a 5 
+
+4. ¿Qué diferencia existe entre EXIT y CONTINUE dentro de un bucle?Si estoy dentro de un bucle y encuentro una fila que no me interesa, ¿qué significa conceptualmente “salir del bucle” frente a “pasar a la siguiente iteración”?
+
+La diferencia es que dentro de un bucle el EXIT se sale del bucle sin realizar alguna otra iteracion.En cambio, CONTINUE salta y sigue a la siguiente iteracion hasta que termine el bucle. Si se encuentra una fila que no se interesa es mejor usar CONTINUE que permite recorrer las siguiente filas y saltarse esa, en vez de solo salir del ciclo ya que en las siguientes iteraciones podria estar la fila que si interesa saber.
+
+5. ¿Qué es GOTO, qué elemento necesita para funcionar y por qué se recomienda que no se utilice en código serio?
+
+GOTO permite saltar hasta una etiqueta, lo cual es necesaria para que funcione, permitiendo saltar gran parte el codigo en una determinada parte. Se reomienda no utilizarla debido a que si esto se maneja en varias partes del codigo puede hacer que su ejecucion sea demanera confusa o no entendible, por eso se recomienda realizar una estructura como condicional o iteraciones que permitan realizar esa funcion.
+
+### Ejercicios practicos
+
+Ejercicio 1 — Clasificación de una nota
+
+Crea una variable:
+
+```sql
+v_nota NUMBER := 4.2;
+```
+
+El programa debe mostrar:
+
+```sql
+Nota: 4.2
+Nivel: ALTO
+```
+
+Reglas:
+4.0 o superior → ALTO
+3.0 a 3.99 → MEDIO
+menor que 3.0 → BAJO
+
+SOLUCION
+
+```sql
+DECLARE
+
+VN_nota NUMBER := 4.2
+
+BEGIN
+    IF VN_nota > 4.0 THEN
+       DBMS_OUTPUT.PUT_LINE('ALTO')    
+    
+    ELSIF VN_nota < 3.0 THEN
+       DBMS_OUTPUT.PUT_LINE('BAJO') 
+    ELSE
+       DBMS_OUTPUT.PUT_LINE('MEDIO') 
+END;
+```
