@@ -8,7 +8,7 @@ categories:
   - "SQL avanzado"
 tags: [SQL Avanzado]
 ---
-En este espacio se presentan los ejercicios realizados y resueltos durante las clases. Posteriormente, podrá consultar los ejercicios en formato PDF para una visualización más detallada y completa del trabajo realizado.
+En este espacio se presentan los ejercicios realizados y resueltos durante las clases para desarollar mis habilidades en SQL Avanzado. Posteriormente, podrá consultar los ejercicios en formato PDF para una visualización más detallada y completa del trabajo realizado.
 
 <a href="/archivos/taller_repaso_SQL_Avanzado_HR.pdf" download>
   Descargar PDF
@@ -107,6 +107,8 @@ GROUP BY D.department_id,
        C.COUNTRY_NAME;
 
 ```
+> Como en este ejercicio nos pide "todo los deparatamntos", se tuvo que utilizar LEFT JOIN para obtener todos los departamentos sin importar si tenian o no empleados.
+
 ### 6.3 Cadena de mando
 
 Columnas obligatorias: employee_id, employee_name, job_title, manager_id, manager_name,
@@ -167,6 +169,9 @@ FROM HR.EMPLOYEES E
 RIGHT JOIN HR.DEPARTMENTS D
 ON e.department_id = D.department_id AND E.SALARY > 10000;
 ```
+> El On se ejcutara con el LEIF JOIN porque mostara filas que no cumplan la condicion de los deparatamentos de empleado con un salario superior a 1000, tal y como se observa en la imagen, al ejecutar la consulta se muestra un total de 36 filas.
+
+![alt text](image-1.png)
 
 WHERE
 ```sql
@@ -178,6 +183,10 @@ RIGHT JOIN HR.DEPARTMENTS D
 ON e.department_id = D.department_id 
 WHERE e.salary > 10000;
 ```
+
+![alt text](image-2.png)
+
+> Lo que se filtra en la cusula WHERE se aplica despues de la reunion, por lo que la condicion se cumplira, lo cual ya no apareceran las filas que aparecen en la consulta anterior, en este caso salieron 1 filas como se observa en la imagen
 
 ### 6.5 Diagnóstico de nulos y compensación total
 
@@ -214,6 +223,8 @@ SELECT E.EMPLOYEE_ID,
 FROM HR.EMPLOYEES E;
 ```
 
+> Segun las columnas pedidas del ejercicio se pidio total_compensation, realizado con una formula, la cual es sumar el salario base y el monto correspondiente a su comisión. En este caso se utilixo NVL que permite reemplazar cualquier valor nulo en cual quier otra cosa, como 0 permitiendo realizar la operacion matematica, ya que si un valor termina siendo nulo al realizar la suma con el salario su resultado seria NULL en vez de 0.
+
 ### 6.6 Agregación con filtrado de grupos
 
 Columnas obligatorias: department_id, department_name, employee_count, avg_salary,
@@ -247,6 +258,8 @@ GROUP BY D.DEPARTMENT_ID,
 HAVING COUNT(E.EMPLOYEE_ID) > 5 AND AVG (E.SALARY) > 6000 ;
 ```
 
+> Esta condicion no puede ir en el WHRE ya que la cluasula realiza el filtro fila por ila antes de realizar la agrupacion.Como se conto los empleado con el COUNT() agrupandolo con el GROUP BY, pero no sabe cuantos empleados hay en cada departamento hasta que se agrupen, es por ello, que en este caso se utiliza HAVING
+
 ### 6.7 Comparación de cada empleado contra el promedio de su departamento
 
 Columnas obligatorias: employee_id, last_name, department_id, salary, dept_avg_salary,
@@ -278,6 +291,12 @@ FROM HR.EMPLOYEES E;
 ```
 > La línea que muestra que es una consulta correlacionada es WHERE E.DEPARTMENT_ID = E2.DEPARTMENT_ID, debido a que se relaciona la consulta externa con la interna. Esto hace que la consulta interna dependa de la fila que se está procesando en la consulta externa.
 
+El ejercio pedia obtener las siguientes columnas, lo cual se realizo de esta manera:
+
+> Para realizar dept_avg_salary, lo cual indica el promedio del departamento y para esto se hizo la subconsulta, lo cual, se restó el salario del departamento y el promedio, el cual se obtuvo por medio de una subconsulta que, nuevamente por medio de AVG()
+
+> Para realizar pct_vs_avg, nos pedian calcular la desviacion procentual del salario del empleado respecto al promedio de su departamento, y esto se hizo con una formula matematica ((Salario-Promedio) / Promedio). Y luego se multiplico con 100 para obtener el porcentaje final.
+
 
 EXPRESIÓN COMUN DE TABLA: WITH
 
@@ -297,6 +316,11 @@ FROM HR.EMPLOYEES E
 JOIN dept_avg A
 ON E.DEPARTMENT_ID = A.DEPARTMENT_ID
 ```
+> Para obtener las columnas anteriormente mencionadas fue...
+- dept_avg_salary, el promedio departamental se precalculo en el bloque de arriba (WITH). Usando Group by permitio agrupar todos los empleados por su • DEPARTMENT_ID y calcula la media aritmética de sus sueldos usando AVG(SALARY).
+- diff_vs_avg  que indica la diferencia del dinero simplemente fue una resta, tomando el salario del empleado y se le resta el promedio de su departamento
+- pct_vs_avg  para este caso se utilizo • la fórmula matemática de desviación porcentual: ((Valor Individual - Valor Promedio) / Valor Promedio) * 100.
+
 
 ### 6.8 Movilidad interna
 Columnas obligatorias: employee_id, last_name, movilidad_status
@@ -402,6 +426,10 @@ WITH JERARQUIA (
 SELECT * FROM JERARQUIA;
 ```
 
+Para realizar una consulta jerarquica que permite ver los jefes de cada empleado, se utilizo un CTE recursiva, siendo esta una expresion comun de tabla que puede consultarse a si misma.
+
+> La clausula UNION ALL permite unir el caso base con la parte recursiva de la consulta, para que de tal manera tenga un fin, la cual es que el manager este en null, indicando que el ultimo en consultarse fue el jefe de todos. En cambio si se hubiera utilizado el UNION elimina los resultados que sean iguales, lo que puede cambiar la cantidad de registros que se conservan en cada iteración y hacer que Oracle tenga un trabajo adicional de eliminar los duplicados.
+
 
 ### 6.10 Posicionamiento salarial por departamento
 Columnas obligatorias: employee_id, last_name, department_id, salary, rn, rk, drk, prev_salary,
@@ -471,6 +499,8 @@ FROM HR.EMPLOYEES
 ORDER BY department_id, 
          hire_date;
 ```
+
+segun la interpretacion de las columnas que se debien devolver, se identifico que rn, rk y drk corresponden a ROW_NUMBER, RANK y DENSE_RANK sobre la misma partición y el mismo ordenamiento.
 
 ### 6.11 Tres mejor pagados de cada departamento
 Columnas obligatorias: department_id, department_name, employee_id, last_name, salary, drk
@@ -635,4 +665,54 @@ mecanismo, evidencia_correccion
 
   </tbody>
 </table>
+
+### Solucion del punto 6.12
+
+CONSULTA 1.1
+
+```sql
+SELECT d.department_name, 
+       COUNT(e.employee_id) AS cantidad_empleados
+FROM hr.departments d 
+LEFT JOIN hr.employees e
+ON d.department_id = e.department_id
+GROUP BY d.department_name;
+```
+CONSULTA 1.2
+
+```sql
+SELECT last_name
+FROM hr.employees
+WHERE department_id NOT IN (10, 20, 30);
+  AND department_id IS NOT NULL;
+```
+
+CONSULTA 1.3
+
+```sql
+SELECT d.department_name, 
+       COUNT(e.employee_id) AS cantidad_empleados
+FROM hr.departments d
+LEFT JOIN hr.employees e 
+ON d.department_id = e.department_id
+JOIN hr.locations l 
+ON d.location_id = l.location_id
+WHERE l.country_id = 'US'
+GROUP BY d.department_name;
+```
+
+CONSULTA 1.4
+
+```sql
+SELECT department_id,
+       MAX(salary) AS mejor_pagado
+FROM hr.employees
+GROUP BY department_id;
+```
+
+CONSULTA 1.5
+```sql
+SELECT AVG(NVL(commission_pct, 0)) AS prom_commission
+FROM hr.employees;
+```
 
