@@ -829,3 +829,45 @@ END LOOP;
 END;
 ```
 
+Ejercicio 5 — Acumulador
+
+Necesitas calcular la suma de los números del 1 al 100.
+
+El resultado debe ser: 5050
+
+Después modifica el ejercicio para calcular solamente la suma de los números pares entre 1 y 100.
+
+SOLUCION
+
+1.
+```sql
+DECLARE
+VN_CONTAR_NUMEROS NUMBER := 0;
+
+BEGIN 
+
+
+FOR I IN 1..100 LOOP
+    VN_CONTAR_NUMEROS := VN_CONTAR_NUMEROS + I;
+END LOOP;
+    DBMS_OUTPUT.PUT_LINE(VN_CONTAR_NUMEROS);
+END;
+```
+
+2.
+```sql
+DECLARE
+VN_CONTAR_NUMEROS NUMBER := 0;
+
+BEGIN 
+
+FOR I IN 1..100 LOOP
+IF MOD(I,2) = 0 THEN
+    VN_CONTAR_NUMEROS := VN_CONTAR_NUMEROS + I;
+END IF;
+END LOOP;
+    DBMS_OUTPUT.PUT_LINE(VN_CONTAR_NUMEROS);
+END;
+```
+
+
