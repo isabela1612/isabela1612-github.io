@@ -2,10 +2,10 @@
 title: "FUNCIONES EN PL/SQL"
 date: "2026-09-27T20:00:00+08:00"
 updated: "2026-09-27T22:45:29+08:00"
-"description": "Un espacio donde comparto mis proyectos, mis experiencias y mi formación como Ingeniera de Sistemas."
+"description": "En este espacio se explica de manera clara, detallada y visual las funciones, para que se utilizan, su estructura, ejemplos y ejercicios."
 draft: false
 categories:
-  - "Presentación"
+  - "PLSQL"
 tags: []
 ---
 
