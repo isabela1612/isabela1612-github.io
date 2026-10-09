@@ -605,8 +605,149 @@ Si se ejecuta muchas veces:
 
 ### Ejercicios practicos
 
+Ejercicio 1. Calcular el doble
+
+Crea una función llamada FN_DOBLE que reciba un número y devuelva el doble.
+
+EJEMPLO:
+Entrada 5 --> resultado 10
+
+```sql
+CREATE OR REPLACE FUNCTION FN_DOBLE(
+VN_DATO IN NUMBER
+) RETURN NUMBER IS
+VN_CALCULAR_DOBLE  NUMBER:= 0;
+BEGIN 
+
+    VN_CALCULAR_DOBLE := VN_DATO * 2;
+RETURN VN_CALCULAR_DOBLE;
+END FN_DOBLE;
+/
+```
+
+Ejercicio 2. Clasificar una nota
+
+Crea una función llamada FN_CLASIFICAR_NOTA que reciba una nota y devuelva un texto según estas condiciones:
+
+- Nota mayor o igual a 4.0: ALTO
+- Nota mayor o igual a 3.0: MEDIO
+- Nota menor a 3.0: BAJO
+
+SOLUCION
+
+```sql
+CREATE OR REPLACE FUNCTION FN_CLASIFICAR_NOTA(
+VN_NOTA IN NUMBER 
+) RETURN VARCHAR2 IS
+VV_TEXTO VARCHAR2(5);
+BEGIN 
+    IF VN_NOTA >= 4.0 THEN 
+        VV_TEXTO := 'ALTO';
+    ELSIF VN_NOTA >= 3.0 THEN 
+        VV_TEXTO := 'MEDIO';
+    ELSE 
+        VV_TEXTO := 'BAJO';
+    END IF;
+    RETURN VV_TEXTO;
+END;
+/
+```
+
+Ejercicio 3. Calcular el salario anual
+
+Crea una función llamada FN_SALARIO_ANUAL que reciba un salario mensual y devuelva el salario anual, suponiendo que recibe el mismo salario durante los 12 meses.
+
+SOLUCION
+
+```sql
+CREATE OR REPLACE FUNCTION FN_SALARIO_ANUAL(
+VN_SALARIO IN NUMBER
+) RETURN NUMBER IS
+BEGIN 
+RETURN VN_SALARIO * 12;
+END;
+/
+```
+
+2. Funciones usando la base de datos HR
+
+Ejercicio 4. Consultar el salario de un empleado
+
+Crea una función llamada FN_CONSULTAR_SALARIO que reciba el EMPLOYEE_ID de un empleado y devuelva su salario consultando la tabla HR.EMPLOYEES.
+
+SOLUCION
+```sql
+CREATE OR REPLACE FUNCTION FN_CONSULTAR_SALARIO(
+VN_EMPLEADO_ID IN NUMBER
+) RETURN NUMBER IS
+VN_SALARIO NUMBER;
+BEGIN
+    SELECT E.SALARY 
+        INTO VN_SALARIO
+    FROM HR.EMPLOYEES E
+    WHERE E.EMPLOYEE_ID = VN_EMPLEADO_ID;
+
+    RETURN VN_SALARIO;
+END;
+/
+```
+
+Ejercicio 5. Obtener el nombre completo
+
+Crea una función llamada FN_NOMBRE_EMPLEADO que reciba el identificador del empleado y devuelva su nombre completo, uniendo FIRST_NAME y LAST_NAME.
+
+SOLUCION
+
+```sql
+CREATE OR REPLACE FUNCTION FN_NOMBRE_EMPLEADO(
+VN_EMPLEADO_ID IN NUMBER
+)RETURN VARCHAR2 IS
+VN_NOMBRE_COMPLETO VARCHAR(100);
+BEGIN 
+SELECT E.FIRST_NAME || ' ' || E.LAST_NAME
+INTO VN_NOMBRE_COMPLETO
+FROM HR.EMPLOYEES E
+WHERE E.EMPLOYEE_ID = VN_EMPLEADO_ID;
+
+RETURN VN_NOMBRE_COMPLETO;
+END;
+/
+```
 
 
+Ejercicio 6. Determinar si un empleado gana más que un valor dado
+
+Crea una función llamada FN_SUPERA_SALARIO que reciba dos parámetros:
+
+- El identificador del empleado.
+- Un salario de comparación.
+
+La función debe consultar el salario del empleado y devolver SI si gana más que el valor indicado, o NO en caso contrario.
+
+SOLUCION
+
+```sql
+CREATE OR REPLACE FUNCTION  FN_SUPERA_SALARIO(
+VN_EMPLEADO_ID IN NUMBER,
+VN_COMPARAR_SALARIO IN NUMBER
+) RETURN VARCHAR2 IS 
+VV_VALOR VARCHAR2(2);
+VN_SALARIO_EMPLEADO NUMBER;
+BEGIN 
+    SELECT E.SALARY
+    INTO VN_SALARIO_EMPLEADO
+    FROM HR.employees E
+    WHERE E.EMPLOYEE_ID = VN_EMPLEADO_ID;
+    
+    IF VN_SALARIO_EMPLEADO > VN_COMPARAR_SALARIO THEN 
+        VV_VALOR := 'SI';
+    ELSE 
+        VV_VALOR := 'NO';
+    END IF;
+    RETURN VV_VALOR;
+END;
+/
+```
 
 
 
