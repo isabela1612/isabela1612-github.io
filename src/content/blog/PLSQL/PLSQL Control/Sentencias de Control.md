@@ -881,6 +881,8 @@ Cada operación descuenta: 250
 
 El programa debe mostrar cuántas operaciones fueron necesarias hasta que el saldo llegue a 0.
 
+SOLUCION
+
 ```sql
 DECLARE 
 VN_SALDO NUMBER := 1000;
@@ -894,6 +896,103 @@ WHILE VN_SALDO <> 0 LOOP
 END LOOP;
 END;
 ```
+
+Ejercicio 7 — Buscar un número
+
+Debes recorrer los números del 1 al 100.
+
+Cuando encuentres el número: 73
+
+debes mostrar:
+```sql
+Número encontrado: 73
+```
+y dejar de recorrer los números.
+
+SOLUCION
+
+```sql
+BEGIN
+FOR I IN 1..100 LOOP
+    IF I = 73 THEN 
+         DBMS_OUTPUT.PUT_LINE('Número encontrado: ' || I);
+         EXIT WHEN I = 73;
+    END IF;
+END LOOP;
+END;
+```
+
+Ejercicio 8 — Saltarse ciertos valores
+
+Recorre los números del 1 al 20.
+
+Debes mostrar todos excepto los múltiplos de 3.
+
+SOLUCION
+
+```sql
+BEGIN 
+FOR I IN 1..20 LOOP
+    CONTINUE WHEN I = 3;
+    DBMS_OUTPUT.PUT_LINE(I);    
+    
+END LOOP;
+END;
+```
+
+Ejercicio 9 — Calificación de estudiantes
+
+Supón que tienes estas notas:
+
+```sql
+4.5
+2.8
+3.7
+4.9
+1.9
+3.0
+```
+Debes recorrerlas y mostrar:
+```sql
+Estudiante 1 → ALTO
+Estudiante 2 → BAJO
+Estudiante 3 → MEDIO
+...
+```
+
+Reglas:
+
+>= 4.0 → ALTO
+>= 3.0 → MEDIO
+< 3.0 → BAJO
+
+SOLUCION
+
+```sql
+DECLARE
+    TYPE t_notas IS TABLE OF NUMBER;
+    VN_notas t_notas := t_notas(4.5, 2.8, 3.7, 4.9, 1.9, 3.0);
+    VN_CONTADOR NUMBER := 1;
+BEGIN
+    FOR I IN 1..VN_notas.COUNT LOOP
+        IF VN_notas(I) >= 4.0 THEN 
+            DBMS_OUTPUT.PUT_LINE('Estudiante ' || VN_CONTADOR || ' --> ALTO');
+        ELSIF VN_notas(I) >= 3.0 THEN
+            DBMS_OUTPUT.PUT_LINE('Estudiante ' || VN_CONTADOR || ' --> MEDIO');
+        ELSE 
+             DBMS_OUTPUT.PUT_LINE('Estudiante ' || VN_CONTADOR || ' --> BAJO');
+    END IF;
+    VN_CONTADOR := VN_CONTADOR +1;
+    END LOOP; 
+END;
+/
+```
+
+Ejercicio 10 — Procesamiento con condición de salida
+
+
+
+
 
 
 
