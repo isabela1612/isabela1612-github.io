@@ -870,4 +870,30 @@ END LOOP;
 END;
 ```
 
+Ejercicio 6 — Mientras exista saldo
+
+Una cuenta empieza con:
+
+```sql
+saldo := 1000
+```
+Cada operación descuenta: 250
+
+El programa debe mostrar cuántas operaciones fueron necesarias hasta que el saldo llegue a 0.
+
+```sql
+DECLARE 
+VN_SALDO NUMBER := 1000;
+VN_CONTADOR NUMBER := 1;
+BEGIN
+WHILE VN_SALDO <> 0 LOOP
+    VN_SALDO := VN_SALDO - 250;
+    DBMS_OUTPUT.PUT_LINE('Operacion: ' || VN_CONTADOR);
+    DBMS_OUTPUT.PUT_LINE('Saldo: ' || VN_SALDO);
+    VN_CONTADOR := VN_CONTADOR +1;
+END LOOP;
+END;
+```
+
+
 
