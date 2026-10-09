@@ -779,3 +779,53 @@ END CASE;
 END;
 ```
 
+Ejercicio 4 — Contador
+
+Crea un programa que muestre:
+```sql
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+```
+
+Pero después modifícalo para que muestre solamente:
+
+```sql
+2
+4
+6
+8
+10
+```
+
+Realizar ambas versiones
+
+SOLUCION 
+
+1.
+```sql
+BEGIN
+FOR I IN 1..10 LOOP
+    DBMS_OUTPUT.PUT_LINE(i);
+END LOOP;
+END;
+```
+
+2.
+```sql
+BEGIN
+FOR I IN 1..10 LOOP
+    IF MOD(I,2) = 0 THEN
+        DBMS_OUTPUT.PUT_LINE(I);
+END IF;
+END LOOP;
+END;
+```
+
