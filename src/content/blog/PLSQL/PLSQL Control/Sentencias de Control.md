@@ -747,4 +747,35 @@ END;
 
 Ejercicio 3 - Jornada
 
+Tienes:
+```sql
+v_jornada VARCHAR2(1) := 'N';
+```
+
+Los valores posibles:
+
+```sql
+D → Diurna
+N → Nocturna
+M → Mixta
+Jornada no reconocida
+```
+
+SOLUCION
+```sql
+DECLARE
+VV_jornada VARCHAR2(1)  := 'N';
+BEGIN
+CASE VV_jornada
+    WHEN 'D' THEN
+        DBMS_OUTPUT.PUT_LINE('Diurno');
+    WHEN 'N' THEN 
+        DBMS_OUTPUT.PUT_LINE('Nocturno');
+    WHEN 'M' THEN 
+        DBMS_OUTPUT.PUT_LINE('Mixta');
+    ELSE 
+        DBMS_OUTPUT.PUT_LINE('Jornada no reconocida');
+END CASE;
+END;
+```
 
