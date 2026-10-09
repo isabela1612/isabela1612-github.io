@@ -711,3 +711,40 @@ BEGIN
     END IF;
 END;
 ```
+
+Ejercicio 2 - Estado de un empleado
+
+crea:
+```sql
+v_salario NUMBER := 2500000;
+v_estado VARCHAR2(1) := 'A';
+```
+
+Reglas:
+
+- Si está activo y gana más de $2.000.000 → "Empleado activo con salario alto"
+- Si está activo pero gana $2.000.000 o menos → "Empleado activo con salario normal"
+- Si no está activo → "Empleado inactivo"
+
+SOLUCION
+
+```sql
+SET SERVEROUTPUT ON;
+
+DECLARE 
+VN_salario NUMBER := 2500000;
+VV_estado VARCHAR2(1) := 'A';
+BEGIN
+IF VN_salario > 200000 AND VV_estado = 'A' THEN 
+    DBMS_OUTPUT.PUT_LINE('Empleado activo con salario alto');
+ELSIF VN_SALARIO <= 200000 AND VV_ESTADO = 'A' THEN 
+    DBMS_OUTPUT.PUT_LINE('Empleado activo con salario normal');
+ELSE 
+    DBMS_OUTPUT.PUT_LINE('Empleado inactivo');
+END IF;
+END;
+```
+
+Ejercicio 3 - Jornada
+
+
