@@ -310,5 +310,27 @@ SHOW ERRORS PROCEDURE PR_ACTUALIZAR_SALARIO;
 
 ### Ejercicios practicos
 
+Ejercicio 1. Calcular y mostrar
 
+Crea un procedimiento llamado PR_CALCULAR_DOBLE que reciba un número, calcule su doble y lo muestre usando DBMS_OUTPUT.PUT_LINE.
 
+Prueba con los valores 5, 8 y 12.
+
+SOLUCION
+
+```sql
+CREATE OR REPLACE PROCEDURE PR_CALCULAR_DOBLE(
+VN_CALCULAR_DOBLE IN NUMBER
+) IS
+VN_CALCULAR NUMBER;
+BEGIN
+VN_CALCULAR := VN_CALCULAR_DOBLE * 2;
+DBMS_OUTPUT.PUT_LINE(VN_CALCULAR);
+END PR_CALCULAR_DOBLE;
+/
+```
+```sql
+EXEC PR_CALCULAR_DOBLE(5);
+EXEC PR_CALCULAR_DOBLE(8);
+EXEC PR_CALCULAR_DOBLE(12);
+```
