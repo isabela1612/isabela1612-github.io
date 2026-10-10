@@ -1,5 +1,5 @@
 ---
-title: "Funciones en PL/SQL"
+title: "Procedimientos en PL/SQL"
 date: "2026-09-01T20:00:00+08:00"
 updated: "2026-09-03T17:45:29+08:00"
 "description": "En este espacio se explica de manera clara, detallada y visual los procedimientos, para que se utilizan, su estructura, ejemplos y ejercicios."
@@ -7,8 +7,7 @@ draft: false
 categories:
   - "PLSQL"
 tags: []
-----
-
+---
 ### ¿Qué es un procedimiento?
 
 Un procedimiento es un bloque de código PL/SQL que se guarda en la base de datos para ejecutar una acción cuando lo necesitemos.
@@ -77,7 +76,7 @@ un procedimiento normalmente no se ejecuta con SELECT, a diferencia de una funci
 
 En una funcion:
 ```sql
-SELECT FUNCION(3) FORM DUAL;
+SELECT FUNCION(3) FROM DUAL;
 ```
 > Devuelve un valor
 
@@ -306,6 +305,8 @@ SHOW ERRORS PROCEDURE PR_ACTUALIZAR_SALARIO;
 ```
 
 ### Preguntas teoricas
+
+
 
 ### Ejercicios practicos
 
