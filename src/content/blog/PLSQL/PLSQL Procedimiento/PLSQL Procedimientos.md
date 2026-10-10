@@ -267,6 +267,38 @@ normalmente quien inicia la transacción decide cuándo confirmarla. Un procedim
 
 ### Errores frecuentes en procedimientos
 
+<table border="1" cellpadding="8" cellspacing="0">
+  <caption>Errores y problemas comunes</caption>
+  <thead>
+    <tr>
+      <th>Error o problema</th>
+      <th>¿Qué significa?</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>PLS-00306</td>
+      <td>El número o los tipos de argumentos no coinciden con la definición del procedimiento.</td>
+    </tr>
+    <tr>
+      <td>Parámetro OUT en NULL</td>
+      <td>Alguna ruta del procedimiento no le asignó un valor.</td>
+    </tr>
+    <tr>
+      <td>El procedimiento aparece INVALID</td>
+      <td>Tiene errores de compilación o alguna dependencia que debe revisarse.</td>
+    </tr>
+    <tr>
+      <td>No ves el mensaje</td>
+      <td>Puede faltar SET SERVEROUTPUT ON.</td>
+    </tr>
+    <tr>
+      <td>Los cambios no aparecen en otra sesión</td>
+      <td></td>
+    </tr>
+  </tbody>
+</table>
+
 Si el procedimiento no compila:
 
 ```sql
