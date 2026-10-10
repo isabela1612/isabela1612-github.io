@@ -71,6 +71,39 @@ END nombre_procedimiento;
 /
 ```
 
+### ¿Cómo se ejecuta un procedimiento?
+
+un procedimiento normalmente no se ejecuta con SELECT, a diferencia de una función.
+
+En una funcion:
+```sql
+SELECT FUNCION(3) FORM DUAL;
+```
+> Devuelve un valor
+
+En un procedimiento no esta solictando un valor que deba devolver la consulta, se hace de dos formas:
+
+>Opción 1
+
+Con EXEC
+
+```sql
+EXEC PR_SALUDO;
+```
+
+> Opción 2
+
+Con un bloque PL/SQL
+
+```sql
+BEGIN
+    PR_SALUDO;
+END;
+/
+```
+
+> Regla: la función devuelve un valor con RETURN; el procedimiento se invoca como una instrucción y puede comunicar resultados mediante parámetros OUT.
+
 ### Los parámetros: IN, OUT e IN OUT
 
 1. IN
@@ -94,6 +127,8 @@ END PR_MOSTRAR_ID;
 
 Se utiliza cuando quieres que el procedimiento entregue un resultado mediante una variable.
 
+En una funcion se utiliza return para obtener un valor calculado dentro de esta, en el procedimiento se hace con out como parametro
+
 EJEMPLO;
 
 ```sql
@@ -107,6 +142,26 @@ BEGIN
 END PR_DOBLE;
 /
 ```
+
+los dos parámetros:
+
+- P_NUMERO IN NUMBER: recibe el número.
+- P_RESULTADO OUT NUMBER: entrega el resultado calculado.
+
+¿Cómo lo ejecutamos?
+
+```sql
+DECLARE
+    V_RESULTADO NUMBER;
+BEGIN
+    PR_DOBLE(5, V_RESULTADO);
+
+    DBMS_OUTPUT.PUT_LINE(V_RESULTADO);
+END;
+/
+```
+
+Resultado: 10 ---> Sale del procedimiento y queda en V_RESULTADO.
 
 3. IN OUT: recibir y devolver modificado
 
@@ -126,7 +181,7 @@ END PR_INCREMENTAR;
 Resumen para memorizar
 
 <table border="1" cellpadding="8" cellspacing="0">
-  <caption>Resumen para memorizar: modos de parámetros</caption>
+  <caption>modos de parámetros</caption>
   <thead>
     <tr>
       <th>Modo</th>
@@ -154,5 +209,73 @@ Resumen para memorizar
 </table>
 
 ### Ejemplo real: actualizar el salario de un empleado
+
+Objetivo: crear un procedimiento que reciba el ID de un empleado y un nuevo salario, y actualice su registro.
+
+```sql
+CREATE OR REPLACE PROCEDURE PR_ACTUALIZAR_SALARIO (
+    P_ID IN HR.EMPLOYEES.EMPLOYEE_ID%TYPE,
+    P_SALARIO IN HR.EMPLOYEES.SALARY%TYPE
+)
+IS
+BEGIN
+    UPDATE HR.EMPLOYEES
+    SET SALARY = P_SALARIO
+    WHERE EMPLOYEE_ID = P_ID;
+END PR_ACTUALIZAR_SALARIO;
+/
+```
+
+💡 El procedimiento no necesita devolver un valor con RETURN. Su acción consiste en evaluar una condición y mostrar un mensaje.
+
+### Manejo de excepciones: EXCEPTION
+
+En PL/SQL puedes manejar ciertos errores mediante EXCEPTION.
+
+Ejemplo;
+
+```sql
+CREATE OR REPLACE PROCEDURE PR_BUSCAR_EMPLEADO (
+    P_ID IN HR.EMPLOYEES.EMPLOYEE_ID%TYPE
+)
+IS
+    V_NOMBRE HR.EMPLOYEES.FIRST_NAME%TYPE;
+BEGIN
+    SELECT FIRST_NAME
+    INTO V_NOMBRE
+    FROM HR.EMPLOYEES
+    WHERE EMPLOYEE_ID = P_ID;
+
+    DBMS_OUTPUT.PUT_LINE('Nombre: ' || V_NOMBRE);
+
+EXCEPTION
+    WHEN NO_DATA_FOUND THEN
+        DBMS_OUTPUT.PUT_LINE('Empleado no encontrado');
+END PR_BUSCAR_EMPLEADO;
+/
+```
+
+### COMMIT y ROLLBACK: ¿quién confirma los cambios?
+
+un procedimiento puede ejecutar operaciones INSERT, UPDATE y DELETE.
+
+- COMMIT: confirma los cambios de la transacción.
+- ROLLBACK: revierte los cambios pendientes de la transacción.
+- SAVEPOINT: establece un punto al que puedes regresar con ROLLBACK TO.
+
+normalmente quien inicia la transacción decide cuándo confirmarla. Un procedimiento reutilizable no debería ejecutar un COMMIT sin una razón clara, porque podría confirmar también cambios que el código que lo llamó todavía no quería confirmar.
+
+### Errores frecuentes en procedimientos
+
+Si el procedimiento no compila:
+
+```sql
+SHOW ERRORS PROCEDURE PR_ACTUALIZAR_SALARIO;
+```
+
+### Preguntas teoricas
+
+### Ejercicios practicos
+
 
 
