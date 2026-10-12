@@ -756,7 +756,8 @@ END;
 --   nombre y la inicial del primer apellido, por ejemplo "Ana M.".
 --   Pista: INSTR y SUBSTR sobre el resultado de TRIM.
 --   Logrado si: funciona con los 8 estudiantes, incluido el que tiene espacios.
---
+
+SOLUCION
 
 ```sql
 CREATE OR REPLACE FUNCTION FN_NOMBRE_CORTO(
@@ -778,6 +779,8 @@ SELECT FN_NOMBRE_CORTO(nombre) from fn_estudiante;
 --   vacia con COUNT devuelve 0.
 --   Logrado si: la consulta sobre los 3 programas suma 8.
 
+SOLUCION
+
 ```sql
 create or replace FUNCTION FN_CANT_ESTUDIANTES(
 P_ID_PROGRAMA IN NUMBER 
@@ -795,4 +798,37 @@ END FN_CANT_ESTUDIANTES;
 /    
 
 SELECT FN_CANT_ESTUDIANTES(id_programa) FROM FN_PROGRAMA;
+```
+
+-- EJERCICIO 3 - Funcion invocable desde SQL
+--   Escriba FN_CLASIFICA_PROMEDIO que devuelva 'EXCELENTE' (4.5 o mas),
+--   'BUENO' (3.5 a 4.49), 'ACEPTABLE' (3.0 a 3.49) o 'INSUFICIENTE'.
+--   Use la funcion en un SELECT con GROUP BY para contar estudiantes por
+--   clasificacion.
+--   Pista: solo parametros IN y tipos SQL; nada de BOOLEAN.
+--   Logrado si: la suma de los grupos es 8.
+
+SOUCION
+
+```sql
+create OR REPLACE FUNCTION FN_CLASIFICA_PROMEDIO(
+P_PROMEDIO NUMBER
+) RETURN VARCHAR2 IS
+CLASIFICACION VARCHAR2(100);
+BEGIN
+    IF P_PROMEDIO >= 4.5 THEN
+        CLASIFICACION :=  'EXCELENTE';
+    ELSIF P_PROMEDIO BETWEEN 3.5 AND 4.49 THEN 
+        CLASIFICACION :=  'BUENO';
+    ELSIF P_PROMEDIO BETWEEN 3.0 AND 3.49 THEN 
+        CLASIFICACION :=  'ACEPTABLE';
+    ELSE
+        CLASIFICACION := 'INSUFICIENTE';
+    END IF;
+    RETURN CLASIFICACION;
+END FN_CLASIFICA_PROMEDIO;
+
+SELECT FN_CLASIFICA_PROMEDIO(PROMEDIO), COUNT(ID_ESTUDIANTE) 
+FROM fn_estudiante
+GROUP BY FN_CLASIFICA_PROMEDIO(PROMEDIO);
 ```
