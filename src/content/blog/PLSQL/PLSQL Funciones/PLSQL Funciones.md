@@ -748,3 +748,51 @@ BEGIN
 END;
 /
 ```
+
+### Ejercicios propuestos
+
+ EJERCICIO 1 - Funcion de formato
+--   Escriba FN_NOMBRE_CORTO que reciba el nombre completo y devuelva el primer
+--   nombre y la inicial del primer apellido, por ejemplo "Ana M.".
+--   Pista: INSTR y SUBSTR sobre el resultado de TRIM.
+--   Logrado si: funciona con los 8 estudiantes, incluido el que tiene espacios.
+--
+
+```sql
+CREATE OR REPLACE FUNCTION FN_NOMBRE_CORTO(
+NOMBRE_COMPLETO IN VARCHAR2
+) RETURN VARCHAR2 IS
+BEGIN
+    return SUBSTR(TRIM(NOMBRE_COMPLETO), 1, INSTR(TRIM(NOMBRE_COMPLETO), ' ') + 1);
+end FN_NOMBRE_CORTO;
+/
+    
+SELECT FN_NOMBRE_CORTO(nombre) from fn_estudiante;
+```
+
+ EJERCICIO 2 - Funcion con consulta interna
+--   Escriba FN_CANT_ESTUDIANTES que reciba un id de programa y devuelva
+--   cuantos estudiantes tiene. Devuelva 0, no NULL, cuando el programa no
+--   tenga estudiantes.
+--   Pista: COUNT no levanta NO_DATA_FOUND; un SELECT ... INTO sobre una tabla
+--   vacia con COUNT devuelve 0.
+--   Logrado si: la consulta sobre los 3 programas suma 8.
+
+```sql
+create or replace FUNCTION FN_CANT_ESTUDIANTES(
+P_ID_PROGRAMA IN NUMBER 
+) RETURN NUMBER IS
+CANTIDAD NUMBER;
+BEGIN
+
+    SELECT COUNT(E.ID_ESTUDIANTE) 
+    INTO CANTIDAD
+    FROM fn_estudiante E
+    WHERE E.ID_PROGRAMA = P_ID_PROGRAMA;
+    
+RETURN CANTIDAD;
+END FN_CANT_ESTUDIANTES;
+/    
+
+SELECT FN_CANT_ESTUDIANTES(id_programa) FROM FN_PROGRAMA;
+```

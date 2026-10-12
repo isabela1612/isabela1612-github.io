@@ -1096,7 +1096,6 @@ END;
 --   una sola expresion CASE asignada a la variable v_nivel.
 --   Pista: la expresion CASE cierra con END, no con END CASE.
 --   Logrado si: el resultado es identico para las notas 4.2, 3.0 y 2.5.
---------------------------------------------------------------------------------
 
 SOLUCION
 
