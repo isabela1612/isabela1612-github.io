@@ -341,6 +341,10 @@ FOR i IN 1..5 LOOP
 END LOOP;
 ```
 
+- i toma los valores del 1 al 5.
+- El incremento es automático.
+- No se necesita escribir i := i + 1. esto lanza error.
+
 ### FOR REVERSE
 
 ```sql
