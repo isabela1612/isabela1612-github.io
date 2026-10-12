@@ -748,8 +748,145 @@ BEGIN
 END;
 /
 ```
+### Ejercicios propuestos
 
+ EJERCICIO 1 - Clasificacion por semestre
+--   Escriba un bloque que recorra CTRL_ESTUDIANTE e imprima, por cada
+--   estudiante, si pertenece a primer ano (semestre 1 o 2), ciclo basico
+--   (3 a 6) o ciclo profesional (7 o mas).
+--   Pista: CASE buscado dentro de un FOR sobre cursor.
+--   Logrado si: la salida tiene 8 lineas y ningun estudiante queda sin clasificar.
 
+SOLUCION
+
+```sql
+BEGIN
+FOR I IN (SELECT ID_ESTUDIANTE, NOMBRE, SEMESTRE FROM ctrl_estudiante ) LOOP
+    CASE 
+    WHEN I.SEMESTRE < 3 THEN 
+        DBMS_OUTPUT.PUT_LINE( i.id_estudiante || ' '|| i.nombre || '-->' || 'Pertenece a primer año');
+    WHEN I.SEMESTRE > 2 AND I.SEMESTRE < 7 THEN
+        DBMS_OUTPUT.PUT_LINE( i.id_estudiante || ' '|| i.nombre || '-->' ||'Pertnece a ciclo basico');
+    WHEN I.SEMESTRE >= 7 THEN
+        DBMS_OUTPUT.PUT_LINE( i.id_estudiante || ' '|| i.nombre || '-->' ||'Pertnece a ciclo profesional');
+    end case;    
+END LOOP;
+END;
+```
+
+-- EJERCICIO 2 - Nota faltante
+--   Recorra CTRL_NOTA e imprima el nombre de los estudiantes que tengan al
+--   menos un corte sin registrar. No use la clausula WHERE de la consulta:
+--   la deteccion debe hacerse con una estructura de control.
+--   Pista: IF con OR y la comparacion IS NULL.
+--   Logrado si: aparece Felipe Cardenas y nadie mas.
+
+SOUCION
+
+```sql
+BEGIN
+FOR I IN (SELECT N.id_estudiante, N.CORTE1, N.CORTE2, N.CORTE3, E.nombre 
+          FROM CTRL_NOTA  N 
+          JOIN ctrl_estudiante E
+          ON E.id_estudiante = N.id_estudiante) LOOP
+          
+          IF I.CORTE1 IS NULL OR I.CORTE2 IS NULL OR I.CORTE3 IS NULL THEN
+            DBMS_OUTPUT.PUT_LINE(I.NOMBRE);
+        END IF;
+END LOOP;
+END;
+```
+
+-- EJERCICIO 3 - Cuotas con tope
+--   Un estudiante debe 1.200.000 pesos y abona 180.000 mensuales. Calcule en
+--   cuantos meses termina de pagar, con un tope de 24 meses para evitar
+--   bucles infinitos. Imprima el saldo restante en cada mes.
+--   Pista: WHILE con dos condiciones, o LOOP con dos EXIT WHEN.
+--   Logrado si: el bucle termina en 7 meses y el ultimo abono es parcial.
+
+SOLUCION
+
+```sql
+DECLARE 
+ESTUDIANTE_DEBE NUMBER := 1200000;
+ESTUDIANTE_ABONA NUMBER := 180000;
+CONTADOR NUMBER := 0;
+BEGIN
+    WHILE ESTUDIANTE_DEBE > 0 AND CONTADOR < 24 LOOP
+           ESTUDIANTE_DEBE := ESTUDIANTE_DEBE - LEAST(ESTUDIANTE_DEBE, ESTUDIANTE_ABONA);
+           CONTADOR := CONTADOR + 1;
+           DBMS_OUTPUT.PUT_LINE('mes ' || CONTADOR ||  ' - Saldo restante: ' || ESTUDIANTE_DEBE);
+        
+    END LOOP;
+END;
+```
+
+-- EJERCICIO 4 - Tabla de multiplicar con saltos
+--   Imprima la tabla del 7 del 1 al 20, omitiendo los multiplos de 3 y
+--   deteniendo el bucle cuando el producto supere 100.
+--   Pista: CONTINUE WHEN y EXIT WHEN en el mismo bucle.
+--   Logrado si: la ultima linea impresa es 7 x 14 = 98.
+
+SOLUCION
+
+```sql
+DECLARE
+MULTIPLICAR NUMBER := 0;
+BEGIN
+    FOR I IN 1..20 LOOP
+        CONTINUE WHEN MOD(I, 3) = 0;
+        MULTIPLICAR := 7 * I;
+        EXIT WHEN MULTIPLICAR >= 100;
+        DBMS_OUTPUT.PUT_LINE('7 x ' || I || ' = '  || MULTIPLICAR);
+        
+    END LOOP;
+END;
+```
+
+-- EJERCICIO 5 - Reescritura
+--   Tome el bloque del PASO 2 y reescriba la cascada de IF THEN ELSIF como
+--   una sola expresion CASE asignada a la variable v_nivel.
+--   Pista: la expresion CASE cierra con END, no con END CASE.
+--   Logrado si: el resultado es identico para las notas 4.2, 3.0 y 2.5.
+--------------------------------------------------------------------------------
+
+SOLUCION
+
+```sql
+--FORMA CON CASE SIMPLE
+DECLARE
+  v_nota   NUMBER(3,2) := 4.2;
+  v_estado VARCHAR2(12);
+  v_nivel  VARCHAR2(10);
+BEGIN
+
+V_NIVEL := CASE
+                WHEN v_nota >= 4 THEN 'ALTO'
+                WHEN v_nota >= 3 THEN 'MEDIO'
+                ELSE 'BAJO'
+            END;
+
+  DBMS_OUTPUT.PUT_LINE('Forma 3: nivel  = ' || v_nivel);
+END;
+/
+
+ --FORMA CON IF(FUE PARTE DEL TALLER)
+DECLARE
+  v_nota   NUMBER(3,2) := 4.2;
+  v_estado VARCHAR2(12);
+  v_nivel  VARCHAR2(10);
+BEGIN
+
+  IF    v_nota >= 4 THEN v_nivel := 'ALTO';
+  ELSIF v_nota >= 3 THEN v_nivel := 'MEDIO';
+  ELSE                   v_nivel := 'BAJO';
+  END IF;
+
+  DBMS_OUTPUT.PUT_LINE('Forma 3: nivel  = ' || v_nivel);
+END;
+/
+
+```
 
 
 
