@@ -335,3 +335,178 @@ EXEC PR_CALCULAR_DOBLE(8);
 EXEC PR_CALCULAR_DOBLE(12);
 ```
 
+Ejercicio 2. Clasificar una nota
+Crea un procedimiento llamado PR_CLASIFICAR_NOTA que reciba una nota y muestre su clasificación:
+
+- Nota mayor o igual a 4.0: ALTO
+- Nota mayor o igual a 3.0: MEDIO
+- Nota menor a 3.0: BAJO
+
+Prueba con 4.5, 3.2 y 2.1.
+
+SOLUCION
+
+```sql
+CREATE OR REPLACE PROCEDURE PR_CLASIFICAR_NOTA(
+P_NOTA IN NUMBER
+) IS 
+VV_CLASIFICACION VARCHAR2(30);
+BEGIN
+    CASE 
+        WHEN P_NOTA >= 4.0 THEN 
+            VV_CLASIFICACION := 'ALTO';
+        WHEN P_NOTA >= 3.0 THEN 
+            VV_CLASIFICACION := 'MEDIO';
+        ELSE 
+            VV_CLASIFICACION := 'BAJO';
+    END CASE;
+    DBMS_OUTPUT.PUT_LINE(VV_CLASIFICACION);
+END;
+/
+```
+```sql   
+exec PR_CLASIFICAR_NOTA(4.5);
+exec PR_CLASIFICAR_NOTA(3.2);
+exec PR_CLASIFICAR_NOTA(2.1);
+```
+
+Ejercicio 3. Calcular el descuento
+Crea un procedimiento llamado PR_CALCULAR_DESCUENTO que reciba el precio de un producto y el porcentaje de descuento.
+
+Debe calcular el descuento, el precio final y mostrar ambos resultados.
+
+SOLUCION
+
+```sql   
+CREATE OR REPLACE PROCEDURE PR_CALCULAR_DESCUENTO(
+P_PRECIO_PRODUCTO IN NUMBER,
+P_DESCUENTO IN NUMBER
+)IS
+VN_PORCENTAJE_PRODUCTO NUMBER := 100 - P_DESCUENTO;
+CALCULAR_PRECIO NUMBER := P_PRECIO_PRODUCTO * VN_PORCENTAJE_PRODUCTO / 100;
+CALCULAR_DESCUENTO NUMBER := P_PRECIO_PRODUCTO - CALCULAR_PRECIO; 
+BEGIN
+    DBMS_OUTPUT.PUT_LINE('Descuento: ' || CALCULAR_DESCUENTO );
+    DBMS_OUTPUT.PUT_LINE('Precio final: ' || CALCULAR_PRECIO );
+END PR_CALCULAR_DESCUENTO;
+    
+
+EXEC PR_CALCULAR_DESCUENTO(200000, 15);
+```
+
+Ejercicio 5. Actualizar el salario
+Crea un procedimiento llamado PR_AUMENTAR_SALARIO que permita aumentar el salario de un empleado en un porcentaje determinado.
+
+Debe actualizar el registro correspondiente en HR.EMPLOYEES y mostrar el salario anterior y el nuevo salario.
+
+SOLUCION
+
+```sql 
+CREATE OR REPLACE PROCEDURE PR_AUMENTAR_SALARIO(
+P_ID_EMPLEADO IN NUMBER,
+P_POCENTAE_AUMENTO IN NUMBER
+) IS
+VN_SALARIO_AUMENTO NUMBER;
+VN_SALARIO_EMP NUMBER;
+VN_SALARIO_NUEVO NUMBER;
+BEGIN 
+    SELECT E.SALARY INTO VN_SALARIO_EMP
+    FROM HR.employees E
+    WHERE E.EMPLOYEE_ID = P_ID_EMPLEADO;
+    
+    VN_SALARIO_AUMENTO := VN_SALARIO_EMP * P_POCENTAE_AUMENTO /100;
+    VN_SALARIO_NUEVO := VN_SALARIO_EMP + VN_SALARIO_AUMENTO;
+    
+    UPDATE HR.employees SET  SALARY = VN_SALARIO_NUEVO
+    WHERE EMPLOYEE_ID = P_ID_EMPLEADO;
+    
+     DBMS_OUTPUT.PUT_LINE('Salario antiguo: ' || VN_SALARIO_EMP);
+    DBMS_OUTPUT.PUT_LINE('Salario nuevo: ' || VN_SALARIO_NUEVO);
+
+exception
+    when NO_DATA_FOUND THEN
+        DBMS_OUTPUT.PUT_LINE('No se encuentra el id del empleado');
+    
+END PR_AUMENTAR_SALARIO;
+```
+
+Ejercicio 6. Cambiar el departamento
+
+Crea un procedimiento llamado PR_CAMBIAR_DEPARTAMENTO que permita cambiar a un empleado de departamento.
+
+Debe recibir el identificador del empleado y el identificador del nuevo departamento. Antes de actualizar, debe comprobar que el empleado y el departamento existan.
+
+SOLUCION
+
+```sql 
+CREATE OR REPLACE PROCEDURE PR_CAMBIAR_DEPARTAMENTO(
+P_ID_EMPLEADO IN NUMBER,
+P_ID_DEPARTAMENTO IN NUMBER
+) IS
+vn_empleado_id NUMBER;
+VN_DEPARTEMENTO_ID NUMBER;
+BEGIN
+    BEGIN 
+    
+    SELECT employee_id
+    INTO vn_empleado_id
+    FROM HR.employees
+    WHERE employee_id = P_ID_EMPLEADO;
+    
+    SELECT DEPARTMENT_ID
+    INTO VN_DEPARTEMENTO_ID
+    FROM HR.DEPARTMENTS
+    WHERE DEPARTMENT_ID = P_ID_DEPARTAMENTO;
+    
+    
+    EXCEPTION
+        WHEN NO_DATA_FOUND THEN
+            DBMS_OUTPUT.PUT_LINE('No existe el empleado o el departamento');
+            RAISE;
+    END;
+    
+    UPDATE HR.employees SET DEPARTMENT_ID = P_ID_DEPARTAMENTO
+    WHERE  EMPLOYEE_ID = P_ID_EMPLEADO;
+END;
+```
+
+Ejercicio 7. Reporte de salarios
+
+Crea un procedimiento llamado PR_REPORTE_SALARIOS que recorra los empleados de HR.EMPLOYEES y muestre:
+
+- Nombre del empleado.
+- Salario.
+- Clasificación salarial:
+  - Mayor a 10000: ALTO.
+  - Entre 5000 y 10000, incluidos: MEDIO.
+  - Menor a 5000: BAJO.
+
+SOLUCION
+
+```sql 
+CREATE OR REPLACE PROCEDURE PR_REPORTE_SALARIOS
+IS
+VV_CLASIFICACION VARCHAR2(20);
+BEGIN
+    FOR I IN (SELECT FIRST_NAME || ' ' || LAST_NAME AS NOMBRE_EMPLEADO, SALARY 
+             FROM HR.EMPLOYEES) LOOP
+        
+        IF I.SALARY > 10000 THEN
+            VV_CLASIFICACION := 'ALTO';
+        ELSIF I.SALARY BETWEEN 5000 AND 10000 THEN
+            VV_CLASIFICACION := 'MEDIO';
+        ELSE
+            VV_CLASIFICACION := 'BAJO';
+        END IF;
+        
+        DBMS_OUTPUT.PUT_LINE('NOMBRE: ' || I.NOMBRE_EMPLEADO);
+        DBMS_OUTPUT.PUT_LINE('SALARIO: ' || I.SALARY);
+        DBMS_OUTPUT.PUT_LINE('CLASIFICACION SALARIAL: ' || VV_CLASIFICACION);
+    END LOOP;
+END;
+/       
+```
+
+
+
+
