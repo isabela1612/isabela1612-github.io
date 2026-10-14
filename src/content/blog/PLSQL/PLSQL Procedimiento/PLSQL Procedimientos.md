@@ -506,6 +506,87 @@ BEGIN
 END;
 /       
 ```
+Ejercicio 8. Aumentar salarios por departamento
+
+Crea un procedimiento llamado PR_AUMENTAR_DEPTO que aumente en un porcentaje determinado el salario de todos los empleados de un departamento.
+
+Debe comprobar que el departamento exista y mostrar cuántos empleados fueron afectados.
+
+SOLUCION
+
+```sql 
+CREATE OR REPLACE PROCEDURE PR_AUMENTAR_DEPTO(
+P_DEPARTMANETO_ID IN NUMBER,
+P_PORCENTAJE_AUMENTO IN NUMBER
+) IS
+VN_CANTIDAD_AFECTADOS NUMBER;
+vn_id_departamento number;
+BEGIN
+   
+    select department_id 
+    INTO vn_id_departamento 
+    FROM hr.DEPARTMENTS 
+    where DEPARTMENT_ID = P_DEPARTMANETO_ID;
+        
+    UPDATE HR.EMPLOYEES SET SALARY = SALARY + (SALARY * P_PORCENTAJE_AUMENTO / 100)
+        WHERE DEPARTMENT_ID = P_DEPARTMANETO_ID;
+    
+    VN_CANTIDAD_AFECTADOS := SQL%ROWCOUNT;
+    
+     DBMS_OUTPUT.PUT_LINE(VN_CANTIDAD_AFECTADOS);
+EXCEPTION
+    WHEN NO_DATA_FOUND THEN
+        DBMS_OUTPUT.PUT_LINE('NO EXISTE ESE id');
+        RAISE;
+         
+END;
+```
+
+Ejercicio 9. Registrar un cambio salarial
+
+Crea un procedimiento llamado PR_REGISTRAR_AUMENTO que actualice el salario de un empleado y registre el cambio en una tabla de historial.
+
+Si la tabla de historial no existe, tendrás que crearla con campos apropiados para guardar el empleado, el salario anterior, el salario nuevo y la fecha del cambio.
+
+SOLUCION
+
+```sql 
+CREATE TABLE HISTORIAL(
+ID_HISTORIAL NUMBER NOT NULL,
+ID_EMPLEADO NUMBER NOT NULL,
+SALARIO_anterior NUMBER,
+SALARIO_NUEVO NUMBER,
+FECHA_CAMBIO DATE DEFAULT SYSDATE,
+PRIMARY KEY(ID_HISTORIAL)
+);
+```
+
+```sql 
+CREATE OR REPLACE PROCEDURE PR_REGISTRAR_AUMENTO(
+P_ID_EMPLEADO IN NUMBER,
+P_NUEVO_SALARIO IN NUMBER
+) IS
+VN_SALARIO_VIEJO NUMBER;
+BEGIN
+    SELECT SALARY
+    INTO VN_SALARIO_VIEJO
+    FROM HR.EMPLOYEES
+    WHERE EMPLOYEE_ID = P_ID_EMPLEADO;
+    
+    UPDATE HR.EMPLOYEES SET SALARY = P_NUEVO_SALARIO
+    WHERE EMPLOYEE_ID = P_ID_EMPLEADO;
+    
+    INSERT INTO HISTORIAL (ID_EMPLEADO, SALARIO_ANTERIOR, SALARIO_NUEVO)
+    VALUES (P_ID_EMPLEADO, VN_SALARIO_VIEJO, P_NUEVO_SALARIO); 
+    
+    COMMIT;
+exception
+    when no_data_found then
+        dbms_output.put_line('no existe el id del empleado');
+        rollback;
+        raise;
+end;
+```
 
 
 
