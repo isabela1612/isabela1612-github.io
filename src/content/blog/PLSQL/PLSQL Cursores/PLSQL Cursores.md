@@ -192,9 +192,8 @@ Es declarado y controlado manualmente por el programador para manejar consultas 
 
 Cuándo se utiliza:
 
-	• Cuando una consulta SELECT devuelve múltiples filas y necesitas recorrerlas fila por fila (o en lotes).
-	• Cuando requieres un control detallado del ciclo de vida del cursor: declarar, abrir (OPEN), extraer datos (FETCH) y cerrar (CLOSE).
-	• Cuando necesitas aplicar lógicas complejas de negocio fila a fila (por ejemplo, con un bucle LOOP o FOR).
+- Cuando una consulta SELECT devuelve múltiples filas y necesitas recorrerlas fila por fila (o en lotes).- Cuando requieres un control detallado del ciclo de vida del cursor: declarar, abrir (OPEN), extraer datos (FETCH) y cerrar (CLOSE).
+- Cuando necesitas aplicar lógicas complejas de negocio fila a fila (por ejemplo, con un bucle LOOP o FOR).
 
 ### Las cuatro fases del cursor explicito
 
@@ -279,9 +278,9 @@ r_producto es un registro que tiene campos para las columnas seleccionadas por e
 
 Por ejemplo:
 
-r_producto.id_producto
-r_producto.nombre
-r_producto.precio
+- r_producto.id_producto
+- r_producto.nombre
+- r_producto.precio
 
 ### Ejemplo completo de cursor explícito
 
@@ -364,56 +363,7 @@ c_productos%NOTFOUND
 
 ¿Cómo cambian durante el recorrido?
 
-<style>
-  table.cursor { border-collapse: collapse; }
-  table.cursor th, table.cursor td { border: 1px solid #333; padding: 8px; text-align: center; }
-  table.cursor td.true  { background-color: #c8e6c9; color: #1b5e20; font-weight: bold; }
-  table.cursor td.false { background-color: #ffcdd2; color: #b71c1c; font-weight: bold; }
-  table.cursor td.other { background-color: #fff9c4; color: #5d4037; }
-</style>
 
-<table class="cursor">
-  <caption>Valores de los atributos de un cursor explícito según el momento</caption>
-  <thead>
-    <tr>
-      <th>Momento</th>
-      <th><code>%ISOPEN</code></th>
-      <th><code>%FOUND</code></th>
-      <th><code>%NOTFOUND</code></th>
-      <th><code>%ROWCOUNT</code></th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <th>Antes de abrir</th>
-      <td class="false">FALSE</td>
-      <td class="other">Error si se consulta</td>
-      <td class="other">Error si se consulta</td>
-      <td class="other">Error si se consulta</td>
-    </tr>
-    <tr>
-      <th>Después de <code>OPEN</code></th>
-      <td class="true">TRUE</td>
-      <td class="other">NULL</td>
-      <td class="other">NULL</td>
-      <td class="other">0</td>
-    </tr>
-    <tr>
-      <th>Después del primer <code>FETCH</code> exitoso</th>
-      <td class="true">TRUE</td>
-      <td class="true">TRUE</td>
-      <td class="false">FALSE</td>
-      <td class="other">1</td>
-    </tr>
-    <tr>
-      <th>Después del segundo <code>FETCH</code> exitoso</th>
-      <td class="true">TRUE</td>
-      <td class="true">TRUE</td>
-      <td class="false">FALSE</td>
-      <td class="other">2</td>
-    </tr>
-    <tr>
-      <th>Después del <code>FETCH</code>
 
 
 > NOTA: El cursor sigue abierto después del último FETCH; se debe cerrarlo explícitamente.
