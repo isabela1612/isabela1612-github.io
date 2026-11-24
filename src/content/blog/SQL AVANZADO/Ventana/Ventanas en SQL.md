@@ -1,5 +1,5 @@
 ---
-title: "Bienvenidos a la sección de mis evidencias"
+title: "Ventanas en SQL Avanzado"
 date: "2026-11-11T20:00:00+08:00"
 updated: "2026-11-12T17:45:29+08:00"
 "description": "Un espacio donde hablo sobre las ventanas."
