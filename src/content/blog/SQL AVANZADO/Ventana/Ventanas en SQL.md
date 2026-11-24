@@ -5,7 +5,7 @@ updated: "2026-11-12T17:45:29+08:00"
 "description": "Un espacio donde hablo sobre las ventanas."
 draft: false
 categories:
-  - "Presentación"
+  - "SQL Avanzado"
 tags: []
 ---
 
