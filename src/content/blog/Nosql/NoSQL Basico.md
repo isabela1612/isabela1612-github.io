@@ -5,7 +5,7 @@ updated: "2026-11-20T17:45:29+08:00"
 "description": "Un espacio donde muestro lo que investigue de NoSQL en MongoBD."
 draft: false
 categories:
-  - "SQL en Avanzado"
+  - "NoSQL"
 tags: []
 ---
 
