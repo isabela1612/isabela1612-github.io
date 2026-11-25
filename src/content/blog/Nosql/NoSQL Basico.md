@@ -1,7 +1,7 @@
 ---
 title: "Bases de datos NoSQL con MongoDB"
 date: "2026-11-19T20:00:00+08:00"
-updated: "2026-011-20T17:45:29+08:00"
+updated: "2026-11-20T17:45:29+08:00"
 "description": "Un espacio donde muestro lo que investigue de NoSQL en MongoBD."
 draft: false
 categories:
