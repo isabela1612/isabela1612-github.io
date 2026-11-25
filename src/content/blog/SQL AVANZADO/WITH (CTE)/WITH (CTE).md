@@ -1,7 +1,7 @@
 ---
 title: "WITH (CTE) en SQL Avanzado"
-date: "2026-08-11T20:00:00+08:00"
-updated: "2026-08-12T17:45:29+08:00"
+date: "2026-11-11T20:00:00+08:00"
+updated: "2026-11-12T17:45:29+08:00"
 "description": "Un espacio donde hablo de WITH (CTE)."
 draft: false
 categories:
@@ -23,7 +23,7 @@ Estas consultas funcionan como tablas temporales dentro de una única instrucci�
 - Evitar repetir subconsultas.
 - Realizar consultas recursivas para recorrer jerarquías o generar secuencias.
 
-### Estructura de WITH
+## Estructura de WITH
 
 Su estructura general es:
 ```sql
@@ -35,13 +35,7 @@ WITH nombre_cte AS (
 SELECT columnas
 FROM nombre_cte;
 ```
-- WITH: inicia la definición de la consulta temporal.
-- nombre_cte: nombre que se le asigna a la expresión de tabla común.
-- AS: indica que a continuación se define la consulta.
-- SELECT: contiene la consulta que genera los resultados del CTE.
-- Consulta principal: utiliza el CTE como si fuera una tabla.
-
-Ejemplo:
+EJEMPLO
 ```sql
 WITH EMPLEADOS_ALTOS AS (
     SELECT
@@ -51,11 +45,9 @@ WITH EMPLEADOS_ALTOS AS (
     FROM HR.EMPLOYEES
     WHERE SALARY > 5000
 )
-
 SELECT *
 FROM EMPLEADOS_ALTOS;
 ```
-
 En este caso, se crea un CTE llamado EMPLEADOS_ALTOS, que contiene los empleados cuyo salario es superior a 5000. Posteriormente, la consulta principal utiliza ese resultado para mostrar los registros.
 
 ¿Cuándo usarlo?
@@ -89,7 +81,7 @@ WITH
 SELECT ...
 FROM CTE_3;
 ```
-EJEMPLO
+Ejemplo:
 ```sql
 WITH
 PROMEDIO_DEPARTAMENTO AS (
@@ -113,17 +105,13 @@ FROM DEPARTAMENTOS_ALTOS DA
 INNER JOIN HR.DEPARTMENTS D
     ON DA.DEPARTMENT_ID = D.DEPARTMENT_ID;
 ```
+
 En este ejemplo se utilizan dos CTE:
 
-1. PROMEDIO_DEPARTAMENTO: calcula el salario promedio de cada departamento.
-
-2. DEPARTAMENTOS_ALTOS: utiliza el resultado anterior para seleccionar los departamentos cuyo promedio supera los 7000.
+- PROMEDIO_DEPARTAMENTO: calcula el salario promedio de cada departamento.
+- DEPARTAMENTOS_ALTOS: utiliza el resultado anterior para seleccionar los departamentos cuyo promedio supera los 7000.
 
 Finalmente, la consulta principal relaciona los resultados con DEPARTMENTS para mostrar el nombre de cada departamento y su promedio salarial.
-
-Importante: los CTE pueden utilizar los CTE definidos anteriormente dentro de la misma cláusula WITH, respetando el orden de declaración.
-
-## Finalmente, la consulta principal relaciona los resultados con DEPARTMENTS para mostrar el nombre de cada departamento y su promedio salarial.
 
 Importante: los CTE pueden utilizar los CTE definidos anteriormente dentro de la misma cláusula WITH, respetando el orden de declaración.
 
@@ -135,7 +123,7 @@ Se utiliza principalmente para recorrer estructuras jerárquicas, como relacione
 
 A diferencia de un CTE normal, que ejecuta una consulta definida, el CTE recursivo repite un proceso utilizando los resultados obtenidos en la iteración anterior, hasta que se cumple una condición de parada.
 
-## Partes de un WITH recursivo
+### Partes de un WITH recursivo
 
 1. Caso base o ancla
 
@@ -151,7 +139,7 @@ Ambas partes se unen mediante UNION ALL.
 
 Es la condición que determina cuándo debe finalizar la recursión. Evita que el proceso continúe generando resultados indefinidamente.
 
-Estructura conceptual
+seria:
 ```sql
 WITH nombre_cte (columnas) AS (
     -- Caso base o ancla
@@ -169,10 +157,9 @@ FROM nombre_cte;
 ```
 En Oracle, la parte recursiva debe estar conectada con el caso base mediante UNION ALL, y el CTE recursivo debe declarar los nombres de sus columnas.
 
-## EJEMPLOS
-
+### Ejemplo sencillo: generar números
 ```sql
-WITH NUMEROS (N) AS (
+Unión: UNIWITH NUMEROS (N) AS (
     -- Caso base
     SELECT 1
     FROM DUAL
@@ -189,22 +176,19 @@ FROM NUMEROS;
 ```
 Explicación:
 
-1. Caso base: comienza generando el número 1.
-2. Parte recursiva: toma el número obtenido y le suma 1.
-3. Condición de parada: mientras el número sea menor que 5, continúa generando el siguiente.
-4. ON ALL combina los resultados del caso base y de cada repetición.
+- Caso base: comienza generando el número 1.
+- Parte recursiva: toma el número obtenido y le suma 1.
+- Condición de parada: mientras el número sea menor que 5, continúa generando el siguiente.
+- ON ALL combina los resultados del caso base y de cada repetición.
 
-Cuando se obtiene el número 5, la condición N < 5 deja de cumplirse y no se generan más registros.
-
-EJEMPLO de WITH recursivo con jerarquías
+### Ejemplo de WITH recursivo con jerarquías
 
 Una de las aplicaciones más comunes de los CTE recursivos es recorrer relaciones jerárquicas.
 
-Por ejemplo, en la tabla EMPLOYEES de Oracle existe la columna MANAGER_ID, que permite identificar al supervisor de cada empleado mediante su EMPLOYEE_ID.
+Ejemplo:
+En la tabla EMPLOYEES de Oracle existe la columna MANAGER_ID, que permite identificar al supervisor de cada empleado mediante su EMPLOYEE_ID.
 
 Con esta relación se puede recorrer la jerarquía desde los empleados que no tienen supervisor hasta los empleados que dependen de ellos.
-
-EJEMPLO
 ```sql
 WITH JERARQUIA_EMPLEADOS (
     EMPLOYEE_ID,
@@ -237,63 +221,55 @@ SELECT *
 FROM JERARQUIA_EMPLEADOS
 ORDER BY NIVEL, EMPLOYEE_ID;
 ```
+
 Explicación:
 
-1. Caso base: obtiene los empleados que no tienen supervisor (MANAGER_ID IS NULL). Estos representan el primer nivel de la jerarquía.
-2. Parte recursiva: busca en EMPLOYEES los empleados cuyo MANAGER_ID coincide con el EMPLOYEE_ID de los registros encontrados anteriormente.
-3. Nivel: cada vez que se encuentra un nuevo grupo de subordinados, se incrementa el nivel en 1.
-4. Unión: UNION ALL combina los empleados iniciales con los encontrados en cada iteración.
-5. Condición de parada: la recursión termina cuando ya no existen más empleados que dependan de los registros encontrados en la iteración anterior.
+- Caso base: obtiene los empleados que no tienen supervisor (MANAGER_ID IS NULL). Estos representan el primer nivel de la jerarquía.
+- Parte recursiva: busca en EMPLOYEES los empleados cuyo MANAGER_ID coincide con el EMPLOYEE_ID de los registros encontrados anteriormente.
+- Nivel: cada vez que se encuentra un nuevo grupo de subordinados, se incrementa el nivel en 1.
+- Unión: UNION ALL combina los empleados iniciales con los encontrados en cada iteración.
+- Condición de parada: la recursión termina cuando ya no existen más empleados que dependan de los registros encontrados en la iteración anterior.
 
 De esta manera, se obtiene la estructura jerárquica de los empleados, mostrando quiénes se encuentran en cada nivel.
 
 Nota: este ejemplo parte de los empleados que no tienen supervisor y recorre sus subordinados. Si existen registros desconectados de esa jerarquía, no aparecerán en el resultado.
 
-## Diferencia entre CTE y CTE recursivo
+##  Diferencia entre CTE y CTE recursivo
 
-<table border="1">
+<table>
   <thead>
     <tr>
       <th>Característica</th>
-      <th>CTE normal</th>
-      <th>CTE recursivo</th>
+      <th>WITH (CTE)</th>
+      <th>VIEW</th>
     </tr>
   </thead>
   <tbody>
     <tr>
-      <td>Definición</td>
-      <td>Consulta temporal con un resultado definido.</td>
-      <td>Consulta temporal que se referencia a sí misma.</td>
+      <td>Duración</td>
+      <td>Durante una única instrucción SQL.</td>
+      <td>Permanece creada en la base de datos hasta que se elimine.</td>
     </tr>
     <tr>
-      <td>Recursividad</td>
-      <td>No utiliza recursividad.</td>
-      <td>Repite el proceso utilizando resultados anteriores.</td>
+      <td>Almacenamiento</td>
+      <td>No crea un objeto permanente.</td>
+      <td>Almacena la definición de la consulta como objeto de la base de datos.</td>
     </tr>
     <tr>
-      <td>Estructura</td>
-      <td>Una consulta dentro del CTE.</td>
-      <td>Caso base y parte recursiva.</td>
+      <td>Reutilización</td>
+      <td>Dentro de la misma instrucción.</td>
+      <td>En diferentes instrucciones SQL.</td>
     </tr>
     <tr>
-      <td>Unión</td>
-      <td>No requiere UNION ALL.</td>
-      <td>Utiliza UNION ALL para unir el caso base con la parte recursiva.</td>
+      <td>Creación</td>
+      <td>Se declara con WITH.</td>
+      <td>Se crea con CREATE VIEW.</td>
     </tr>
     <tr>
-      <td>Uso principal</td>
-      <td>Organizar y dividir consultas complejas.</td>
-      <td>Recorrer jerarquías y generar secuencias.</td>
-    </tr>
-    <tr>
-      <td>Condición de parada</td>
-      <td>No necesita una condición recursiva.</td>
-      <td>Necesita una condición que permita detener la recursión.</td>
+      <td>Uso</td>
+      <td>Organizar consultas y dividir procesos.</td>
+      <td>Consultar información de manera reutilizable.</td>
     </tr>
   </tbody>
 </table>
-
--  Ejemplo de CTE normal: obtener empleados con salarios superiores a 5000.
-- Ejemplo de CTE recursivo: recorrer la relación entre supervisores y subordinados para obtener los diferentes niveles de una organización.
-
 
